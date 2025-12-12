@@ -31,7 +31,7 @@ $cssPath = $baseUrl . '/assets/css/style.css';
         <nav class="navbar">
             <div class="container">
                 <div class="nav-brand">
-                    <a href="<?php echo htmlspecialchars(url('index.php')); ?>" title="Dashboard">
+                    <a href="<?php echo htmlspecialchars(url('index.php')); ?>" title="Social Care Contracts Management">
                         <span>SCCM</span>
                     </a>
                 </div>
@@ -62,18 +62,22 @@ $cssPath = $baseUrl . '/assets/css/style.css';
                             </ul>
                         </li>
                         
-                        <!-- Resources Dropdown (combines Learn and News & Updates) -->
+                        <!-- Learn Dropdown -->
                         <li class="nav-dropdown">
-                            <a href="#" class="nav-dropdown-toggle">Resources <span class="dropdown-arrow">▼</span></a>
+                            <a href="#" class="nav-dropdown-toggle">Learn <span class="dropdown-arrow">▼</span></a>
                             <ul class="nav-dropdown-menu">
-                                <li style="font-weight: 600; color: var(--text-light); padding: 0.5rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Learn</li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/social-care-contracts-guide.php')); ?>">Contracts Guide</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/glossary.php')); ?>">Glossary</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/documentation.php')); ?>">Documentation</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/how-tos.php')); ?>">How-to Guides</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/faq.php')); ?>">FAQ</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li style="font-weight: 600; color: var(--text-light); padding: 0.5rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">News & Updates</li>
+                            </ul>
+                        </li>
+                        
+                        <!-- News & Updates Dropdown -->
+                        <li class="nav-dropdown">
+                            <a href="#" class="nav-dropdown-toggle">News & Updates <span class="dropdown-arrow">▼</span></a>
+                            <ul class="nav-dropdown-menu">
                                 <li><a href="<?php echo htmlspecialchars(url('pages/local-authority-rates.php')); ?>">Local Authority Rates</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/articles.php')); ?>">Articles</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/updates.php')); ?>">Updates</a></li>
@@ -148,18 +152,22 @@ $cssPath = $baseUrl . '/assets/css/style.css';
                         <li><a href="<?php echo htmlspecialchars(url('login.php')); ?>">Login</a></li>
                         <li><a href="<?php echo htmlspecialchars(url('register.php')); ?>">Register</a></li>
                         
-                        <!-- Resources Dropdown (combines Learn and News & Updates) -->
+                        <!-- Learn Dropdown -->
                         <li class="nav-dropdown">
-                            <a href="#" class="nav-dropdown-toggle">Resources <span class="dropdown-arrow">▼</span></a>
+                            <a href="#" class="nav-dropdown-toggle">Learn <span class="dropdown-arrow">▼</span></a>
                             <ul class="nav-dropdown-menu">
-                                <li style="font-weight: 600; color: var(--text-light); padding: 0.5rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Learn</li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/social-care-contracts-guide.php')); ?>">Contracts Guide</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/glossary.php')); ?>">Glossary</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/documentation.php')); ?>">Documentation</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/how-tos.php')); ?>">How-to Guides</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/faq.php')); ?>">FAQ</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li style="font-weight: 600; color: var(--text-light); padding: 0.5rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">News & Updates</li>
+                            </ul>
+                        </li>
+                        
+                        <!-- News & Updates Dropdown -->
+                        <li class="nav-dropdown">
+                            <a href="#" class="nav-dropdown-toggle">News & Updates <span class="dropdown-arrow">▼</span></a>
+                            <ul class="nav-dropdown-menu">
                                 <li><a href="<?php echo htmlspecialchars(url('pages/local-authority-rates.php')); ?>">Local Authority Rates</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/articles.php')); ?>">Articles</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/updates.php')); ?>">Updates</a></li>

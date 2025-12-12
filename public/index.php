@@ -615,7 +615,7 @@ include INCLUDES_PATH . '/header.php';
             
             <!-- Contract Management Section with Image -->
             <div style="background: #f8fafc; border-top: 3px solid var(--primary-color); border-bottom: 3px solid var(--primary-color); padding: 3rem 1rem; margin: 3rem 0;">
-                <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: center;">
                     <div>
                         <h2 style="margin-top: 0; color: var(--text-color); display: flex; align-items: center;">
                             <i class="fa-solid fa-file-contract" style="margin-right: 0.75rem; color: var(--primary-color); font-size: 2rem;"></i>
@@ -643,10 +643,10 @@ include INCLUDES_PATH . '/header.php';
                                 Contract expiry monitoring
                             </li>
                         </ul>
-                        <a href="<?php echo url('contracts.php'); ?>" class="btn btn-primary" style="margin-top: 0.5rem; display: inline-block;">View Contracts</a>
+                        <a href="<?php echo url('pages/social-care-contracts-guide.php'); ?>" class="btn btn-primary" style="margin-top: 0.5rem; display: inline-block;">Learn About Contract Management</a>
                     </div>
                     <div>
-                        <img src="<?php echo htmlspecialchars(url('assets/images/contract.jpeg')); ?>" alt="Contract Management" style="width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); object-fit: cover;">
+                        <img src="<?php echo htmlspecialchars(url('assets/images/contract-management.jpeg')); ?>" alt="Contract Management" style="width: 310px; max-width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); object-fit: cover;">
                     </div>
                 </div>
             </div>
