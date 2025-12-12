@@ -1,0 +1,124 @@
+Yes, there are several useful reports with historical rate data! Here's what I've found:
+
+## Key Reports with Historical Rates
+
+### 1. **Homecare Association's "Minimum Price for Homecare" Reports (Annual)**
+These are published annually and provide comprehensive data on recommended rates. Available for Scotland specifically:
+
+- **2025-26**: £32.88 per hour
+- **2024-25**: £29.35 per hour  
+- **2023-24**: £26.50 per hour
+- **2018**: £16.54 per hour (referenced in older sources)
+
+**Where to find them**: https://www.homecareassociation.org.uk/about-us/research-and-reports.html
+(They have separate reports for Scotland, England, Wales, and Northern Ireland)
+
+### 2. **Scottish Government Social Care Minimum Pay - Historical Timeline**
+
+Based on my research, here's the progression of **mandated minimum rates for social care workers in Scotland**:
+
+| Period | Rate | Notes |
+|--------|------|-------|
+| **Oct 2016** | £8.25 | Real Living Wage implementation began |
+| **May 2017** | £8.45 | |
+| **2018-19** | £8.45 | Extended to sleepover hours |
+| **March 2020** | £9.30 | COVID-19 immediate uplift |
+| **Nov 2020** | £9.50 | |
+| **2021** | £9.90 | |
+| **Sept 2022** | £10.90 | |
+| **April 2023** | £10.90 | |
+| **April 2024** | £12.00 | |
+| **April 2025** | £12.60 | Current rate |
+| **Nov 2025** | £13.45 | Real Living Wage announced but not yet mandatory for commissioned services |
+
+### 3. **Real Living Wage Historical Rates (Voluntary)**
+
+The independently calculated Real Living Wage (different from government mandated rates):
+
+| Announced | Rate UK | Rate London |
+|-----------|---------|-------------|
+| 2016 | £8.25 | £9.40 |
+| 2017 | £8.45 | £9.75 |
+| 2018 | £8.75 | £10.20 |
+| 2019 | £9.00 | £10.55 |
+| 2020 | £9.30 | £10.75 |
+| Nov 2020 | £9.50 | £10.85 |
+| 2021 | £9.90 | £11.05 |
+| Sept 2022 | £10.90 | £11.95 |
+| 2023 | £10.90 | £11.95 |
+| 2024 | £12.00 | £13.15 |
+| Nov 2024 | £12.60 | £13.85 |
+| Nov 2025 | £13.45 | £14.80 |
+
+**Source**: Living Wage Foundation / Living Wage Scotland
+
+### 4. **GOV.SCOT Labour Market Reports**
+
+The Scottish Government publishes annual reports showing wage distributions in social care:
+
+**"Adult social care labour supply: pay increase impact assessment"** (2024)
+- Contains wage distribution data from 2016-2022
+- Shows hourly pay by percentile (10th, 20th, 30th, 40th, 50th)
+- Separate data for residential vs non-residential care
+- Real hourly pay increases 2016-2022:
+  - Residential care: 10th percentile increased 16.4%, median increased 14.0%
+  - Non-residential care: 10th percentile increased 15.5%, median increased 11.6%
+
+**Where to find it**: https://www.gov.scot/publications/assessing-impact-increase-pay-adult-social-care-labour-supply-scotland/
+
+### 5. **Useful Historical Context Documents**
+
+- **COSLA Guidance on Charging**: Each local authority follows COSLA guidance, though they set individual rates
+- **National Care Home Contract (NCHC) rates**: Published annually, showing what local authorities pay care homes
+- **Free Personal Care rates**: Government publishes annual rates
+  - 2025-26: £254.60/week personal care, £111.90/week nursing care supplement
+
+## How to Use These for Your Database
+
+### Reference Data Tables You Should Create:
+
+**1. Historical Real Living Wage Table**
+```sql
+CREATE TABLE real_living_wage_history (
+    effective_date DATE PRIMARY KEY,
+    uk_rate DECIMAL(5,2),
+    london_rate DECIMAL(5,2),
+    announced_date DATE,
+    source VARCHAR(255)
+);
+```
+
+**2. Scottish Government Minimum Rates**
+```sql
+CREATE TABLE scotland_mandated_minimum_rates (
+    effective_date DATE PRIMARY KEY,
+    rate DECIMAL(5,2),
+    applies_to VARCHAR(255),  -- 'all hours', 'sleepover', etc
+    source VARCHAR(255)
+);
+```
+
+**3. Homecare Association Benchmark Rates**
+```sql
+CREATE TABLE homecare_association_rates (
+    year_from DATE,
+    year_to DATE,
+    scotland_rate DECIMAL(5,2),
+    england_rate DECIMAL(5,2),
+    wales_rate DECIMAL(5,2),
+    northern_ireland_rate DECIMAL(5,2),
+    report_url VARCHAR(500)
+);
+```
+
+### Pre-populated CSV Files You Could Include:
+
+You could ship your software with CSV files containing these historical rates that seed your database on installation. This would give users immediate access to historical context.
+
+### Data Sources to Monitor Annually:
+
+1. **Living Wage Foundation** (November each year): New Real Living Wage announced
+2. **Homecare Association** (December/January each year): New Minimum Price for Homecare
+3. **Scottish Government** (March/April each year): Budget announcements for social care worker minimum pay
+4. **COSLA**: Guidance updates on charging policies
+

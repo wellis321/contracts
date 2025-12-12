@@ -1,0 +1,117 @@
+I'll help you find information about how Scottish local authorities pay for social care support. This is quite complex as each of Scotland's 32 local authorities may have different rates and structures. Let me search for current information.Based on my research, I can help you understand how social care payments work across Scotland's 32 local authorities. This is quite complex as each authority has some variation, but there are common frameworks.
+
+## How Local Authorities Pay Social Care Organisations
+
+### Minimum Worker Pay Rates
+- **Current minimum rate**: £12.60 per hour (from April 2025) for all social care workers in commissioned services
+- This applies to all hours worked, including overnight shifts whether awake or asleep
+- However, the **Homecare Association recommends £32.88 per hour** as the minimum price local authorities should pay to providers to cover wages, travel time, mileage, and on-costs
+
+### Types of Support Hours
+
+Different types of support include:
+
+1. **Waking/Active Hours**: Standard care hours where workers are actively providing support
+2. **Waking Night Shifts**: Overnight shifts where workers remain awake throughout
+3. **Sleepover Hours**: Worker stays overnight but can sleep, only intervening if needed
+   - Historically paid as flat rates (around £25-30 per shift)
+   - Now must be paid at full hourly rate (£12.60/hour minimum for workers)
+   - Some authorities are moving away from sleepovers to waking nights due to costs
+
+4. **Support Hours**: General assistance with daily activities
+5. **Personal Care**: Specific care tasks (washing, toileting, meals)
+
+### How Local Authorities Calculate Budgets
+
+Most Scottish local authorities use a **Resource Allocation System (RAS)**:
+
+- Gathers information about assessed needs and risks
+- Allocates points to desired outcomes
+- Automatically calculates a support budget based on the point system
+- Budgets are calibrated to typical care package costs
+- Senior managers can authorize packages beyond standard benchmarks
+
+Each of Scotland's 32 local authorities may have slightly different:
+- Hourly rates they pay to providers
+- Eligibility criteria
+- Budget calculation methods
+- Charging policies
+
+## Self-Directed Support (SDS) - The Four Options
+
+Under the Social Care (Self-directed Support) (Scotland) Act 2013, everyone eligible for social care must be offered four options:
+
+**Option 1 - Direct Payment**: 
+- You receive money directly to your bank account
+- You arrange and purchase your own support
+- Can employ Personal Assistants (PAs) or use care agencies
+- Most choice and control, but most responsibility
+
+**Option 2 - Individual Service Fund**:
+- You choose the provider/support
+- Local authority or third party manages the money
+- Choice without financial management responsibility
+
+**Option 3 - Direct Service**:
+- Local authority arranges everything for you
+- Least choice but no management burden
+
+**Option 4 - Mix and Match**:
+- Combine any of the above options for different aspects of your care
+
+## Self-Funding and Mixed Funding
+
+### How Self-Funding Works:
+
+**Financial Thresholds in Scotland (2025/26)**:
+- **Below £10,000-£21,500** in savings/assets: Local authority will help fund care (exact threshold varies by authority and care type)
+- **Above £21,500**: Generally required to self-fund
+
+**Free Personal Care**:
+- Available to everyone aged 65+ who needs it, regardless of income
+- Worth £254.60 per week (paid to care provider)
+- Covers personal hygiene, meal preparation, etc.
+- Additional £111.90/week for nursing care if assessed as needed
+
+### Mixing Local Authority and Self-Funding:
+
+**Yes, you can mix funding through**:
+
+1. **"Topping Up"**: 
+   - If local authority funding doesn't cover your preferred care package
+   - You pay the difference yourself
+   - Common when choosing more expensive providers or additional hours
+
+2. **Partial Funding**:
+   - After financial assessment, local authority may contribute part of costs
+   - You contribute based on your income/savings
+   - Contributions are means-tested
+
+3. **Option 4 SDS**:
+   - Can use direct payment for some services
+   - Local authority arranges others
+   - Completely flexible mixing of funding sources
+
+4. **Contributing to Chargeable Services**:
+   - Some services are chargeable (non-personal care elements)
+   - You may pay for chargeable hours while local authority covers personal care
+   - Example from Edinburgh: £23.94/hour for chargeable home care services
+
+### Important Points:
+
+- Each local authority has different charging policies following COSLA guidance
+- Financial assessments look at income, savings, and disability-related expenditure
+- You can request a financial assessment at any time
+- Personal care for over 65s is always free, but you may pay for other support
+- If your care costs more than the local authority direct payment, you can top up with your own funds
+
+## Finding Your Local Authority Information
+
+Each of Scotland's 32 local authorities will have specific:
+- Contact details for their Health and Social Care Partnership
+- Information about their SDS process and charging policies
+- Details of approved providers and rates
+
+You can find your local authority's social care department through the [mygov.scot website](https://www.mygov.scot/social-services) or the Care Information Scotland website.
+
+Would you like me to search for specific information about a particular local authority or aspect of social care funding?

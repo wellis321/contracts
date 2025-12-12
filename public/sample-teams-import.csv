@@ -1,0 +1,21 @@
+type,name,description,display_order
+team_type,Department,Organizational department,1
+team_type,Division,Organizational division,2
+team_type,Region,Geographic region,3
+type,name,team_type,parent_team,description
+team,Finance,Department,,Finance department
+team,HR,Department,,Human Resources department
+team,Operations,Department,,Operations department
+team,North Region,Region,,Northern operations
+team,South Region,Region,,Southern operations
+team,North Team A,Department,North Region,North region team A
+team,North Team B,Department,North Region,North region team B
+team,South Team A,Department,South Region,South region team A
+type,user_email,team_name,role,is_primary
+user_assignment,john.doe@example.com,Finance,manager,Yes
+user_assignment,jane.smith@example.com,HR,manager,Yes
+user_assignment,bob.jones@example.com,North Team A,manager,Yes
+user_assignment,alice.brown@example.com,North Team A,member,No
+user_assignment,charlie.wilson@example.com,South Team A,manager,Yes
+user_assignment,diana.davis@example.com,Finance,finance,No
+

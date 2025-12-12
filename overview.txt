@@ -1,0 +1,35 @@
+the project is to be created in php and mysql using phpmyadmin.
+
+It needs to work locally for testing purposes and then get pushed to github where  it can be deployed to production in Hostinger.
+
+The app is to be used by social care providers who support vulnerable people and are funded by tenders that theyoften call contracts.
+
+The app will need authentication so that users from eaqch of the organisations can control their own contracts separately form other organisations using the same app.
+
+Different staff with various roles in organisations will need to read, edit and update the information within the appp in diffferent  ways.
+
+Each organisation shoould have admins that can perform full CRUD actions for their data. Their should be a superadmin that can create organisations and allocate the admins with in the organisations. 
+
+Superadmins will add an organisations domain so that users can register and be associated to that orgaonsisation through the domain. The superuser will allocate "seats" to an organisation which can be updated.
+
+The contracts are for social care provided and there aremany various types. They can be sleepovers, support, Waking Hours and there may be many many more. The Organisation should be able to add and update these as need be.
+
+The contract types can have a currrent "rate" which is the money paid by the local authority to the organisation for providing that particular type of support.
+
+The rate can change over time and this change should be recorded so that we can reporton payments over time.
+
+Every Local Authority in Scotland provides these rates and payments and they also provide other cost provisions on top such as admin costs with contracts.
+
+Some contracts may be for a single persons support and some may be for bulk people. For instancce an organisation may get a payment to provide a service to 12 people over a year with stipulation for 12 staff providing so many hours of day time shifts and so many hours of sleepover shifts.
+
+Sometimes people pay for their own support and this is called self directed support. 
+
+There are various ways of social care being paid for in Scotland and we will need too dicover what they all are and then incorporate them into the app.
+
+This app will help support organisations manage their contracts.
+
+All language in the app should be in UK english and not American english for instanc organisation instead of organization.
+
+The app should have a home page setting out its purpose and a nav bar with a dedicated footer and header also in place so that we can add a changelog, how tos. FaQ pages, documentation, articles and updates etc.
+
+This is the email for the site when users can contatc us socialcarecontracts@outlook.com
