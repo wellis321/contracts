@@ -323,7 +323,8 @@ include INCLUDES_PATH . '/header.php';
                 
                 <div class="form-group">
                     <label for="contract_number">Contract Number</label>
-                    <input type="text" id="contract_number" name="contract_number" class="form-control">
+                    <input type="text" id="contract_number" name="contract_number" class="form-control" placeholder="Leave blank to auto-generate">
+                    <small style="color: var(--text-light); font-size: 0.875rem;">If left blank, a contract number will be automatically generated based on your organisation prefix and the contract start date (e.g., HCS-2024-001)</small>
                 </div>
             </div>
             

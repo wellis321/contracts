@@ -74,10 +74,82 @@ class Contract {
     }
     
     /**
+     * Generate a contract number automatically
+     * Format: PREFIX-YYYY-NNN (e.g., HCS-2024-001, SAMH-2024-001)
+     */
+    public static function generateContractNumber($organisationId, $startDate) {
+        $db = getDbConnection();
+        
+        // Get organisation prefix
+        $stmt = $db->prepare("SELECT contract_number_prefix, name FROM organisations WHERE id = ?");
+        $stmt->execute([$organisationId]);
+        $org = $stmt->fetch();
+        
+        // Use prefix if set, otherwise derive from organisation name
+        $prefix = $org['contract_number_prefix'] ?? null;
+        if (empty($prefix)) {
+            // Derive prefix from organisation name (take uppercase letters or first 4-5 chars)
+            $name = $org['name'] ?? '';
+            // Try to extract acronym (uppercase letters)
+            preg_match_all('/\b[A-Z]/', $name, $matches);
+            if (!empty($matches[0])) {
+                $prefix = implode('', $matches[0]);
+            } else {
+                // Fallback: use first 4 uppercase characters of name
+                $prefix = strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $name), 0, 4));
+            }
+            // Ensure prefix is not empty
+            if (empty($prefix)) {
+                $prefix = 'ORG';
+            }
+        }
+        
+        // Get year from start date
+        $year = date('Y', strtotime($startDate));
+        
+        // Find the highest sequence number for this prefix and year
+        $stmt = $db->prepare("
+            SELECT contract_number 
+            FROM contracts 
+            WHERE organisation_id = ? 
+            AND contract_number LIKE ?
+            AND contract_number IS NOT NULL
+            AND contract_number != ''
+            ORDER BY contract_number DESC
+            LIMIT 1
+        ");
+        $pattern = $prefix . '-' . $year . '-%';
+        $stmt->execute([$organisationId, $pattern]);
+        $lastContract = $stmt->fetch();
+        
+        $sequence = 1;
+        if ($lastContract && !empty($lastContract['contract_number'])) {
+            // Extract sequence number from last contract number
+            // Format: PREFIX-YYYY-NNN
+            $parts = explode('-', $lastContract['contract_number']);
+            if (count($parts) === 3 && $parts[0] === $prefix && $parts[1] === $year) {
+                $lastSequence = intval($parts[2]);
+                $sequence = $lastSequence + 1;
+            }
+        }
+        
+        // Format: PREFIX-YYYY-NNN (e.g., HCS-2024-001)
+        return sprintf('%s-%s-%03d', strtoupper($prefix), $year, $sequence);
+    }
+    
+    /**
      * Create new contract
      */
     public static function create($data) {
         $db = getDbConnection();
+        
+        // Auto-generate contract number if not provided
+        if (empty($data['contract_number']) && !empty($data['start_date'])) {
+            $data['contract_number'] = self::generateContractNumber(
+                $data['organisation_id'],
+                $data['start_date']
+            );
+        }
         
         // Check if person_id column exists
         $personIdColumnExists = false;
@@ -192,6 +264,17 @@ class Contract {
      * Update contract
      */
     public static function update($id, $data) {
+        // Auto-generate contract number if not provided and we have start_date
+        if (empty($data['contract_number']) && !empty($data['start_date'])) {
+            // Get organisation_id from existing contract
+            $existing = self::findById($id);
+            if ($existing && !empty($existing['organisation_id'])) {
+                $data['contract_number'] = self::generateContractNumber(
+                    $existing['organisation_id'],
+                    $data['start_date']
+                );
+            }
+        }
         $db = getDbConnection();
         
         // Get old data for audit logging
