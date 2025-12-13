@@ -32,7 +32,8 @@ if (!$isLoggedIn) {
                 <li style="margin-bottom: 0.5rem;"><strong>Total Contract Value:</strong> Sum of all contract values (total_amount), showing whether you're gaining or losing value</li>
                 <li style="margin-bottom: 0.5rem;"><strong>Total Payments Received:</strong> Actual payments received during the period</li>
                 <li style="margin-bottom: 0.5rem;"><strong>New Contracts:</strong> Contracts that started during this period, with trend comparison</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Contracts Ending:</strong> Contracts ending during this period, helping identify renewal needs</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Contracts Ended:</strong> Contracts that ended during this period</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Contracts Ending Soon:</strong> Active contracts ending within 3 months after this period</li>
             </ul>
             
             <h4 style="margin-top: 1.5rem;"><i class="fas fa-building" style="margin-right: 0.5rem;"></i> Contracts by Local Authority</h4>
@@ -64,7 +65,8 @@ if (!$isLoggedIn) {
                         <li style="margin-bottom: 0.25rem;">Contract value</li>
                     </ul>
                 </li>
-                <li style="margin-bottom: 0.5rem;"><strong>Contracts Ending:</strong> List of contracts ending during the period, helping you plan for renewals</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Contracts Ended:</strong> List of contracts that ended during the selected period</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Contracts Ending Soon:</strong> Active contracts that will end within 3 months after the period (requires attention for renewals)</li>
             </ul>
             
             <h4 style="margin-top: 1.5rem;"><i class="fas fa-money-bill-wave" style="margin-right: 0.5rem;"></i> Payment Information</h4>
@@ -186,62 +188,130 @@ function getFinancialYearsRange($numYears = 1) {
     ];
 }
 
-// Handle financial year quick-select
-$fyRange = null;
-if (!empty($_GET['fy_range'])) {
-    switch ($_GET['fy_range']) {
-        case 'current':
-            $fyRange = getFinancialYear();
-            break;
-        case 'last':
-            $fyRange = getFinancialYearAgo(1);
-            break;
-        case 'last5':
-            $fyRange = getFinancialYearsRange(5);
-            break;
-        case 'custom':
-            // Use custom dates from GET params
-            break;
+// ALWAYS check GET parameters first - manual dates take absolute priority
+$startDate = null;
+$endDate = null;
+
+// Check if dates were submitted in the form - use raw GET values directly
+// Only use GET values if they are non-empty and valid
+if (isset($_GET['start_date']) && trim($_GET['start_date']) !== '') {
+    $rawStartDate = trim($_GET['start_date']);
+    // HTML date inputs always send YYYY-MM-DD format, so validate and use directly
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $rawStartDate)) {
+        // Validate it's a real date
+        $parsed = strtotime($rawStartDate);
+        if ($parsed !== false && $parsed > 0) {
+            // Valid format and valid date - use it directly
+            $startDate = $rawStartDate;
+        }
+        // If invalid date, $startDate remains null and will use default
+    } else {
+        // Try to parse if not in correct format
+        $parsed = strtotime($rawStartDate);
+        if ($parsed !== false && $parsed > 0) {
+            $startDate = date('Y-m-d', $parsed);
+        }
+        // If parsing fails, $startDate remains null
     }
 }
 
-// Get date range
-if ($fyRange) {
-    $startDate = $fyRange['start']->format('Y-m-d');
-    $endDate = $fyRange['end']->format('Y-m-d');
-} else {
-    // Default to current financial year if no dates specified
-    if (empty($_GET['start_date']) && empty($_GET['end_date'])) {
-        $currentFY = getFinancialYear();
-        $startDate = $currentFY['start']->format('Y-m-d');
-        $endDate = $currentFY['end']->format('Y-m-d');
+if (isset($_GET['end_date']) && trim($_GET['end_date']) !== '') {
+    $rawEndDate = trim($_GET['end_date']);
+    // HTML date inputs always send YYYY-MM-DD format, so validate and use directly
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $rawEndDate)) {
+        // Validate it's a real date
+        $parsed = strtotime($rawEndDate);
+        if ($parsed !== false && $parsed > 0) {
+            // Valid format and valid date - use it directly
+            $endDate = $rawEndDate;
+        }
+        // If invalid date, $endDate remains null and will use default
     } else {
-        $startDate = !empty($_GET['start_date']) ? $_GET['start_date'] : null;
-        $endDate = !empty($_GET['end_date']) ? $_GET['end_date'] : null;
-        
-        // If only one date is provided, use current FY for the other
-        if ($startDate && !$endDate) {
-            $currentFY = getFinancialYear($startDate);
-            $endDate = $currentFY['end']->format('Y-m-d');
-        } elseif (!$startDate && $endDate) {
-            $currentFY = getFinancialYear($endDate);
-            $startDate = $currentFY['start']->format('Y-m-d');
+        // Try to parse if not in correct format
+        $parsed = strtotime($rawEndDate);
+        if ($parsed !== false && $parsed > 0) {
+            $endDate = date('Y-m-d', $parsed);
+        }
+        // If parsing fails, $endDate remains null
+    }
+}
+
+// If we have manual dates, use them (even if only one is set)
+// IMPORTANT: Preserve the original startDate value - don't overwrite it
+if ($startDate !== null || $endDate !== null) {
+    // Store original start date to prevent overwriting
+    $originalStartDate = $startDate;
+    
+    // If only one date is provided, set the other appropriately
+    if ($startDate && !$endDate) {
+        // If only start date provided, default end date to today
+        $endDate = date('Y-m-d');
+        // Preserve the original start date - don't let it be overwritten
+        $startDate = $originalStartDate;
+    } elseif (!$startDate && $endDate) {
+        // If only end date provided, calculate start date based on that date's financial year
+        $currentFY = getFinancialYear($endDate);
+        $startDate = $currentFY['start']->format('Y-m-d');
+    }
+    // If both are set, use them as-is (startDate already preserved)
+} else {
+    // No manual dates - check for financial year quick-select
+    $fyRange = null;
+    if (!empty($_GET['fy_range'])) {
+        switch ($_GET['fy_range']) {
+            case 'current':
+                $fyRange = getFinancialYear();
+                break;
+            case 'last':
+                $fyRange = getFinancialYearAgo(1);
+                break;
+            case 'last5':
+                $fyRange = getFinancialYearsRange(5);
+                break;
+            case 'custom':
+                // Custom but no dates - fall through to default
+                break;
         }
     }
+    
+    if ($fyRange) {
+        $startDate = $fyRange['start']->format('Y-m-d');
+        $endDate = $fyRange['end']->format('Y-m-d');
+    } else {
+        // Default to current financial year start and today's date for end
+        // Ensure we always have valid defaults
+        $today = new DateTime();
+        $currentFY = getFinancialYear($today);
+        $startDate = $currentFY['start']->format('Y-m-d');
+        $endDate = $today->format('Y-m-d'); // Default end date to today
+    }
 }
 
-// Ensure dates are in correct format for HTML date inputs (YYYY-MM-DD)
-if (!empty($startDate) && strtotime($startDate) !== false) {
-    $startDate = date('Y-m-d', strtotime($startDate));
-} else {
-    $currentFY = getFinancialYear();
+// Final safety check - ensure dates are never null or invalid
+// Validate start date
+if (empty($startDate) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate)) {
+    $today = new DateTime();
+    $currentFY = getFinancialYear($today);
     $startDate = $currentFY['start']->format('Y-m-d');
-}
-if (!empty($endDate) && strtotime($endDate) !== false) {
-    $endDate = date('Y-m-d', strtotime($endDate));
 } else {
-    $currentFY = getFinancialYear();
-    $endDate = $currentFY['end']->format('Y-m-d');
+    // Validate it's a real date
+    $testDate = DateTime::createFromFormat('Y-m-d', $startDate);
+    if (!$testDate || $testDate->format('Y-m-d') !== $startDate) {
+        $today = new DateTime();
+        $currentFY = getFinancialYear($today);
+        $startDate = $currentFY['start']->format('Y-m-d');
+    }
+}
+
+// Validate end date
+if (empty($endDate) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $endDate)) {
+    $endDate = date('Y-m-d');
+} else {
+    // Validate it's a real date
+    $testDate = DateTime::createFromFormat('Y-m-d', $endDate);
+    if (!$testDate || $testDate->format('Y-m-d') !== $endDate) {
+        $endDate = date('Y-m-d');
+    }
 }
 
 $db = getDbConnection();
@@ -288,8 +358,8 @@ foreach ($contracts as $contract) {
     $id = $contract['id'] ?? null;
     $contractNumber = $contract['contract_number'] ?? '';
     $title = $contract['title'] ?? '';
-    $startDate = $contract['start_date'] ?? '';
-    $endDate = $contract['end_date'] ?? '';
+    $contractStartDate = $contract['start_date'] ?? '';
+    $contractEndDate = $contract['end_date'] ?? '';
     
     // First priority: skip if we've seen this exact contract ID
     if ($id && in_array($id, $seenIds)) {
@@ -298,7 +368,7 @@ foreach ($contracts as $contract) {
     
     // Second priority: if contract number exists and we've seen this exact combination before, skip
     if ($contractNumber) {
-        $contractKey = md5($contractNumber . '|' . $title . '|' . $startDate . '|' . $endDate);
+        $contractKey = md5($contractNumber . '|' . $title . '|' . $contractStartDate . '|' . $contractEndDate);
         if (in_array($contractKey, $seenContractKeys)) {
             continue;
         }
@@ -316,8 +386,88 @@ $filteredContracts = [];
 $totalContractValue = 0;
 $contractsByLA = [];
 $newContracts = [];
-$endingContracts = [];
+$endedContracts = []; // Contracts that ended during the period
+$endingContracts = []; // Contracts ending after the period (future)
 
+// First, count ALL contracts by local authority (not just those in date range)
+// Track active and inactive separately, and only count active contracts in funding totals
+$rangeStart = strtotime($startDate);
+$rangeEnd = strtotime($endDate);
+
+foreach ($uniqueContracts as $contract) {
+    // Get effective status for this contract
+    $effectiveStatus = Contract::getEffectiveStatus($contract);
+    
+    $laName = trim($contract['local_authority_name'] ?? 'Unknown');
+    $laId = $contract['local_authority_id'] ?? null;
+    
+    // Use ID as key if available, otherwise use normalized name
+    $laKey = $laId ? 'id_' . $laId : 'name_' . strtolower($laName);
+    
+    // Initialize local authority entry if not exists
+    if (!isset($contractsByLA[$laKey])) {
+        $contractsByLA[$laKey] = [
+            'id' => $laId,
+            'name' => $laName,
+            'active_count' => 0,
+            'inactive_count' => 0,
+            'value' => 0,
+            'contracts' => []
+        ];
+    }
+    
+    // Check if this contract is already counted for this local authority
+    $contractAlreadyAdded = false;
+    foreach ($contractsByLA[$laKey]['contracts'] as $existingContract) {
+        if (($existingContract['id'] ?? null) === ($contract['id'] ?? null)) {
+            $contractAlreadyAdded = true;
+            break;
+        }
+    }
+    
+    if (!$contractAlreadyAdded) {
+        // Ensure name is set if not already (in case we have ID but no name)
+        if (empty($contractsByLA[$laKey]['name']) && $laName !== 'Unknown') {
+            $contractsByLA[$laKey]['name'] = $laName;
+        }
+        // Ensure ID is set if not already
+        if (!$contractsByLA[$laKey]['id'] && $laId) {
+            $contractsByLA[$laKey]['id'] = $laId;
+        }
+        
+        // Count active vs inactive
+        if ($effectiveStatus === 'active') {
+            $contractsByLA[$laKey]['active_count']++;
+        } else {
+            $contractsByLA[$laKey]['inactive_count']++;
+        }
+        
+        // Only include contract value if it's active OR was active during the date range
+        $contractStart = strtotime($contract['start_date']);
+        $contractEnd = $contract['end_date'] ? strtotime($contract['end_date']) : null;
+        $wasActiveInRange = false;
+        
+        if ($effectiveStatus === 'active') {
+            // Currently active - include if it overlaps with date range
+            $wasActiveInRange = ($contractStart <= $rangeEnd && ($contractEnd === null || $contractEnd >= $rangeStart));
+        } else {
+            // Inactive - only include if it was active during part of the date range
+            // (i.e., it ended during the range or started during the range)
+            $endedInRange = ($contractEnd && $contractEnd >= $rangeStart && $contractEnd <= $rangeEnd);
+            $startedInRange = ($contractStart >= $rangeStart && $contractStart <= $rangeEnd);
+            $wasActiveInRange = ($endedInRange || $startedInRange);
+        }
+        
+        if ($wasActiveInRange) {
+            $contractValue = $contract['total_amount'] ?? 0;
+            $contractsByLA[$laKey]['value'] += $contractValue;
+        }
+        
+        $contractsByLA[$laKey]['contracts'][] = $contract;
+    }
+}
+
+// Now filter contracts by date range for other calculations
 foreach ($uniqueContracts as $contract) {
     // Update contract with effective status for display
     $contract['effective_status'] = Contract::getEffectiveStatus($contract);
@@ -331,62 +481,60 @@ foreach ($uniqueContracts as $contract) {
     if ($contractStart <= $rangeEnd && ($contractEnd === null || $contractEnd >= $rangeStart)) {
         $filteredContracts[] = $contract;
         
-        // Calculate contract value (use total_amount if available, otherwise estimate)
-        $contractValue = $contract['total_amount'] ?? 0;
-        $totalContractValue += $contractValue;
+        // Only include contract value if it's active OR was active during the date range
+        $wasActiveInRange = false;
+        if ($contract['effective_status'] === 'active') {
+            // Currently active - include if it overlaps with date range
+            $wasActiveInRange = true;
+        } else {
+            // Inactive - only include if it was active during part of the date range
+            // (i.e., it ended during the range or started during the range)
+            $endedInRange = ($contractEnd && $contractEnd >= $rangeStart && $contractEnd <= $rangeEnd);
+            $startedInRange = ($contractStart >= $rangeStart && $contractStart <= $rangeEnd);
+            $wasActiveInRange = ($endedInRange || $startedInRange);
+        }
         
-        // Group by local authority (use ID as primary key to avoid duplicates from name variations)
-        // Only include each contract once per local authority
-        $laName = trim($contract['local_authority_name'] ?? 'Unknown');
-        $laId = $contract['local_authority_id'] ?? null;
+        if ($wasActiveInRange) {
+            // Calculate contract value (use total_amount if available, otherwise estimate)
+            $contractValue = $contract['total_amount'] ?? 0;
+            $totalContractValue += $contractValue;
+        }
         
-        // Use ID as key if available, otherwise use normalized name
-        $laKey = $laId ? 'id_' . $laId : 'name_' . strtolower($laName);
+        // Track contracts started in this period
+        $isNewContract = ($contractStart >= $rangeStart && $contractStart <= $rangeEnd);
+        if ($isNewContract) {
+            $newContracts[] = $contract;
+        }
         
-        // Check if this contract is already in this local authority's contracts array
-        $contractAlreadyAdded = false;
-        if (isset($contractsByLA[$laKey])) {
-            foreach ($contractsByLA[$laKey]['contracts'] as $existingContract) {
-                if (($existingContract['id'] ?? null) === ($contract['id'] ?? null)) {
-                    $contractAlreadyAdded = true;
+        // Track contracts that ended during this period
+        $endedInPeriod = ($contractEnd && $contractEnd >= $rangeStart && $contractEnd <= $rangeEnd);
+        if ($endedInPeriod && !$isNewContract) {
+            // Don't double-count: if it started and ended in period, only show as "new"
+            $endedContracts[] = $contract;
+        }
+    }
+}
+
+// Track contracts ending AFTER the period (future contracts ending soon)
+// These are active contracts that will end after the date range but within 3 months
+foreach ($uniqueContracts as $contract) {
+    $contract['effective_status'] = Contract::getEffectiveStatus($contract);
+    $contractEnd = $contract['end_date'] ? strtotime($contract['end_date']) : null;
+    
+    if ($contract['effective_status'] === 'active' && $contractEnd) {
+        $threeMonthsAfterRange = $rangeEnd + (90 * 24 * 60 * 60); // 90 days in seconds
+        if ($contractEnd > $rangeEnd && $contractEnd <= $threeMonthsAfterRange) {
+            // Check if not already in array
+            $alreadyAdded = false;
+            foreach ($endingContracts as $existing) {
+                if (($existing['id'] ?? null) === ($contract['id'] ?? null)) {
+                    $alreadyAdded = true;
                     break;
                 }
             }
-        }
-        
-        if (!$contractAlreadyAdded) {
-            if (!isset($contractsByLA[$laKey])) {
-                $contractsByLA[$laKey] = [
-                    'id' => $laId,
-                    'name' => $laName,
-                    'count' => 0,
-                    'value' => 0,
-                    'contracts' => []
-                ];
+            if (!$alreadyAdded) {
+                $endingContracts[] = $contract;
             }
-            // Ensure name is set if not already (in case we have ID but no name)
-            if (empty($contractsByLA[$laKey]['name']) && $laName !== 'Unknown') {
-                $contractsByLA[$laKey]['name'] = $laName;
-            }
-            // Ensure ID is set if not already
-            if (!$contractsByLA[$laKey]['id'] && $laId) {
-                $contractsByLA[$laKey]['id'] = $laId;
-            }
-            $contractsByLA[$laKey]['count']++;
-            $contractsByLA[$laKey]['value'] += $contractValue;
-            $contractsByLA[$laKey]['contracts'][] = $contract;
-        }
-        
-        // Track new contracts (started in this period)
-        // If a contract both starts and ends in the period, only show it as "new"
-        $isNewContract = ($contractStart >= $rangeStart && $contractStart <= $rangeEnd);
-        $isEndingContract = ($contractEnd && $contractEnd >= $rangeStart && $contractEnd <= $rangeEnd);
-        
-        if ($isNewContract) {
-            $newContracts[] = $contract;
-        } elseif ($isEndingContract) {
-            // Only add to ending contracts if it didn't start in this period
-            $endingContracts[] = $contract;
         }
     }
 }
@@ -403,8 +551,8 @@ foreach ($prevContracts as $contract) {
     $id = $contract['id'] ?? null;
     $contractNumber = $contract['contract_number'] ?? '';
     $title = $contract['title'] ?? '';
-    $startDate = $contract['start_date'] ?? '';
-    $endDate = $contract['end_date'] ?? '';
+    $contractStartDate = $contract['start_date'] ?? '';
+    $contractEndDate = $contract['end_date'] ?? '';
     
     // First priority: skip if we've seen this exact contract ID
     if ($id && in_array($id, $prevSeenIds)) {
@@ -413,7 +561,7 @@ foreach ($prevContracts as $contract) {
     
     // Second priority: if contract number exists and we've seen this exact combination before, skip
     if ($contractNumber) {
-        $contractKey = md5($contractNumber . '|' . $title . '|' . $startDate . '|' . $endDate);
+        $contractKey = md5($contractNumber . '|' . $title . '|' . $contractStartDate . '|' . $contractEndDate);
         if (in_array($contractKey, $prevSeenContractKeys)) {
             continue;
         }
@@ -430,7 +578,7 @@ foreach ($prevContracts as $contract) {
 $prevFilteredContracts = [];
 $prevTotalValue = 0;
 $prevNewContracts = 0;
-$prevEndingContracts = 0;
+$prevEndedContracts = 0;
 
 foreach ($prevUniqueContracts as $contract) {
     // Update contract with effective status for display
@@ -449,7 +597,7 @@ foreach ($prevUniqueContracts as $contract) {
             $prevNewContracts++;
         }
         if ($contractEnd && $contractEnd >= $prevRangeStart && $contractEnd <= $prevRangeEnd) {
-            $prevEndingContracts++;
+            $prevEndedContracts++;
         }
     }
 }
@@ -467,7 +615,7 @@ $contractCountChange = $activeInPeriod - $prevActiveInPeriod;
 $contractValueChange = $totalContractValue - $prevTotalValue;
 $contractValueChangePercent = $prevTotalValue > 0 ? ($contractValueChange / $prevTotalValue) * 100 : 0;
 $newContractsChange = count($newContracts) - $prevNewContracts;
-$endingContractsChange = count($endingContracts) - $prevEndingContracts;
+$endedContractsChange = count($endedContracts) - $prevEndedContracts;
 
 // Get payments in date range - optimized query
 $payments = [];
@@ -579,11 +727,11 @@ foreach ($contractsByLA as $laKey => $data) {
     foreach ($data['contracts'] as $contract) {
         $effectiveStatus = Contract::getEffectiveStatus($contract);
         if ($effectiveStatus === 'inactive') {
-            $endDate = $contract['end_date'] ? strtotime($contract['end_date']) : null;
+            $contractEndTimestamp = $contract['end_date'] ? strtotime($contract['end_date']) : null;
             $today = time();
             
             // Only flag if contract has no end date or end date is in the future
-            if (!$endDate || $endDate > $today) {
+            if (!$contractEndTimestamp || $contractEndTimestamp > $today) {
                 $inactive++;
             }
         }
@@ -714,9 +862,38 @@ include INCLUDES_PATH . '/header.php';
             <?php
             // Display selected financial year info
             $selectedFY = getFinancialYear($startDate);
-            $displayStart = date('d/m/Y', strtotime($startDate));
-            $displayEnd = date('d/m/Y', strtotime($endDate));
-            $isFYRange = ($startDate === $selectedFY['start']->format('Y-m-d') && $endDate === $selectedFY['end']->format('Y-m-d'));
+            
+            // Ensure we have valid dates for display
+            $displayStartDate = $startDate ?? (getFinancialYear()['start']->format('Y-m-d'));
+            $displayEndDate = $endDate ?? date('Y-m-d');
+            
+            // Validate and format dates for display
+            $displayStart = 'N/A';
+            $displayEnd = 'N/A';
+            
+            if ($displayStartDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $displayStartDate)) {
+                $startDateTime = DateTime::createFromFormat('Y-m-d', $displayStartDate);
+                if ($startDateTime) {
+                    $displayStart = $startDateTime->format('d/m/Y');
+                }
+            }
+            
+            if ($displayEndDate && preg_match('/^\d{4}-\d{2}-\d{2}$/', $displayEndDate)) {
+                $endDateTime = DateTime::createFromFormat('Y-m-d', $displayEndDate);
+                if ($endDateTime) {
+                    $displayEnd = $endDateTime->format('d/m/Y');
+                }
+            }
+            
+            // If still N/A, try to parse as-is
+            if ($displayEnd === 'N/A' && $displayEndDate) {
+                $testEnd = DateTime::createFromFormat('Y-m-d', $displayEndDate);
+                if ($testEnd) {
+                    $displayEnd = $testEnd->format('d/m/Y');
+                }
+            }
+            
+            $isFYRange = ($displayStartDate && $displayEndDate && $displayStartDate === $selectedFY['start']->format('Y-m-d') && $displayEndDate === $selectedFY['end']->format('Y-m-d'));
             ?>
             <div style="margin-top: 1rem; padding: 0.75rem; background: white; border-radius: 0.25rem; border: 1px solid var(--border-color);">
                 <strong>Selected Period:</strong> 
@@ -732,20 +909,61 @@ include INCLUDES_PATH . '/header.php';
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
             <div class="form-group">
                 <label for="start_date">Start Date</label>
-                <input type="date" id="start_date" name="start_date" class="form-control" value="<?php echo htmlspecialchars($startDate); ?>">
+                <input type="date" id="start_date" name="start_date" class="form-control" value="<?php echo htmlspecialchars($startDate ?? (getFinancialYear()['start']->format('Y-m-d'))); ?>">
             </div>
             <div class="form-group">
                 <label for="end_date">End Date</label>
-                <input type="date" id="end_date" name="end_date" class="form-control" value="<?php echo htmlspecialchars($endDate); ?>">
+                <?php
+                // Ensure end date is always set to today if somehow empty
+                $finalEndDate = $endDate ?? date('Y-m-d');
+                if (empty($finalEndDate) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $finalEndDate)) {
+                    $finalEndDate = date('Y-m-d');
+                }
+                ?>
+                <input type="date" id="end_date" name="end_date" class="form-control" value="<?php echo htmlspecialchars($finalEndDate); ?>">
             </div>
         </div>
         <div class="form-group" style="margin-top: 1rem;">
             <button type="submit" class="btn btn-primary">Generate Report</button>
-            <?php if (isset($_GET['fy_range']) && $_GET['fy_range'] !== 'custom'): ?>
+            <?php if (isset($_GET['fy_range']) && $_GET['fy_range'] !== 'custom' && !$hasManualDates): ?>
                 <input type="hidden" name="fy_range" value="<?php echo htmlspecialchars($_GET['fy_range']); ?>">
+            <?php else: ?>
+                <input type="hidden" name="fy_range" value="custom">
             <?php endif; ?>
         </div>
     </form>
+    
+    <script>
+    // Automatically set fy_range to 'custom' when user manually changes dates
+    document.addEventListener('DOMContentLoaded', function() {
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+        const form = startDateInput ? startDateInput.closest('form') : null;
+        
+        if (startDateInput && endDateInput && form) {
+            function updateFYRange() {
+                // Check if dates have been manually changed
+                const startValue = startDateInput.value;
+                const endValue = endDateInput.value;
+                
+                if (startValue || endValue) {
+                    // Find or create the hidden fy_range input
+                    let fyRangeInput = form.querySelector('input[name="fy_range"]');
+                    if (!fyRangeInput) {
+                        fyRangeInput = document.createElement('input');
+                        fyRangeInput.type = 'hidden';
+                        fyRangeInput.name = 'fy_range';
+                        form.appendChild(fyRangeInput);
+                    }
+                    fyRangeInput.value = 'custom';
+                }
+            }
+            
+            startDateInput.addEventListener('change', updateFYRange);
+            endDateInput.addEventListener('change', updateFYRange);
+        }
+    });
+    </script>
     
     <?php if (empty($filteredContracts) && empty($payments)): ?>
         <div class="alert alert-info">
@@ -805,16 +1023,16 @@ include INCLUDES_PATH . '/header.php';
                 <?php endif; ?>
             </p>
         </div>
-        <div class="card" style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white;">
-            <h3 style="color: white; margin: 0;"><?php echo count($endingContracts); ?></h3>
+        <div class="card" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
+            <h3 style="color: white; margin: 0;"><?php echo count($endedContracts); ?></h3>
             <p style="color: rgba(255,255,255,0.9); margin: 0.5rem 0 0 0;">
-                Contracts Ending
-                <?php if ($endingContractsChange != 0): ?>
+                Contracts Ended
+                <?php if ($endedContractsChange != 0): ?>
                     <br><small style="font-size: 0.85rem;">
                         <?php 
-                        $color = $endingContractsChange < 0 ? 'rgba(255,255,255,0.8)' : 'rgba(255,200,200,0.9)';
-                        $sign = $endingContractsChange > 0 ? '+' : '';
-                        echo '<span style="color: ' . $color . ';">' . $sign . $endingContractsChange . ' vs previous</span>';
+                        $color = $endedContractsChange < 0 ? 'rgba(255,255,255,0.8)' : 'rgba(255,200,200,0.9)';
+                        $sign = $endedContractsChange > 0 ? '+' : '';
+                        echo '<span style="color: ' . $color . ';">' . $sign . $endedContractsChange . ' vs previous</span>';
                         ?>
                     </small>
                 <?php endif; ?>
@@ -989,7 +1207,21 @@ include INCLUDES_PATH . '/header.php';
                                     <strong><?php echo htmlspecialchars($laName); ?></strong>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo $data['count']; ?></td>
+                            <td>
+                                <?php 
+                                $activeCount = $data['active_count'] ?? 0;
+                                $inactiveCount = $data['inactive_count'] ?? 0;
+                                if ($activeCount > 0 && $inactiveCount > 0) {
+                                    echo $activeCount . ' active, ' . $inactiveCount . ' inactive';
+                                } elseif ($activeCount > 0) {
+                                    echo $activeCount . ' active';
+                                } elseif ($inactiveCount > 0) {
+                                    echo $inactiveCount . ' inactive';
+                                } else {
+                                    echo '0';
+                                }
+                                ?>
+                            </td>
                             <td>£<?php echo number_format($data['value'], 2); ?></td>
                             <td>
                                 <?php if (isset($laIssues[$laName])): 
@@ -1040,7 +1272,7 @@ include INCLUDES_PATH . '/header.php';
     <?php endif; ?>
     
     <!-- Contract Activity -->
-    <?php if (!empty($newContracts) || !empty($endingContracts)): ?>
+    <?php if (!empty($newContracts) || !empty($endedContracts) || !empty($endingContracts)): ?>
         <div class="report-section" style="margin-bottom: 2rem;">
             <div class="report-section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; cursor: pointer;" onclick="toggleSection('contractActivity')">
                 <h3 style="margin: 0;"><i class="fas fa-chart-area" style="margin-right: 0.5rem;"></i> Contract Activity</h3>
@@ -1076,9 +1308,35 @@ include INCLUDES_PATH . '/header.php';
                 </div>
             <?php endif; ?>
             
+            <?php if (!empty($endedContracts)): ?>
+                <div class="card" style="border-left: 4px solid var(--warning-color);">
+                    <h4 style="color: var(--warning-color); margin-top: 0;"><i class="fas fa-calendar-times"></i> Contracts Ended</h4>
+                    <ul style="margin-bottom: 0; list-style: none; padding: 0;">
+                        <?php foreach (array_slice($endedContracts, 0, 10) as $contract): ?>
+                            <li onclick="window.location.href='<?php echo htmlspecialchars(url('contract-view.php?id=' . $contract['id'])); ?>'" style="cursor: pointer; padding: 0.75rem; margin-bottom: 0.5rem; background: var(--bg-light); border-radius: 0.375rem; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='var(--bg-light)';">
+                                <strong><?php echo htmlspecialchars($contract['title']); ?></strong>
+                                <?php if ($contract['contract_number']): ?>
+                                    <br><small style="color: var(--text-light);"><?php echo htmlspecialchars($contract['contract_number']); ?></small>
+                                <?php endif; ?>
+                                <br><small style="color: var(--text-light);">
+                                    <?php echo htmlspecialchars($contract['local_authority_name'] ?? 'Unknown'); ?> - 
+                                    Ended: <?php echo date(DATE_FORMAT, strtotime($contract['end_date'])); ?>
+                                    <?php if ($contract['total_amount']): ?>
+                                        - Value: £<?php echo number_format($contract['total_amount'], 2); ?>
+                                    <?php endif; ?>
+                                </small>
+                            </li>
+                        <?php endforeach; ?>
+                        <?php if (count($endedContracts) > 10): ?>
+                            <li><em>... and <?php echo count($endedContracts) - 10; ?> more</em></li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            
             <?php if (!empty($endingContracts)): ?>
                 <div class="card" style="border-left: 4px solid var(--danger-color);">
-                    <h4 style="color: var(--danger-color); margin-top: 0;"><i class="fas fa-calendar-times"></i> Contracts Ending</h4>
+                    <h4 style="color: var(--danger-color); margin-top: 0;"><i class="fas fa-exclamation-triangle"></i> Contracts Ending Soon</h4>
                     <ul style="margin-bottom: 0; list-style: none; padding: 0;">
                         <?php foreach (array_slice($endingContracts, 0, 10) as $contract): ?>
                             <li onclick="window.location.href='<?php echo htmlspecialchars(url('contract-view.php?id=' . $contract['id'])); ?>'" style="cursor: pointer; padding: 0.75rem; margin-bottom: 0.5rem; background: var(--bg-light); border-radius: 0.375rem; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='rgba(59, 130, 246, 0.1)';" onmouseout="this.style.backgroundColor='var(--bg-light)';">
@@ -1239,6 +1497,7 @@ function exportToCSV() {
             totalContractValue: <?php echo $totalContractValue; ?>,
             totalPayments: <?php echo $totalPayments; ?>,
             newContracts: <?php echo count($newContracts); ?>,
+            endedContracts: <?php echo count($endedContracts); ?>,
             endingContracts: <?php echo count($endingContracts); ?>
         },
         contractsByLA: <?php echo json_encode($contractsByLA); ?>,
@@ -1267,7 +1526,8 @@ function exportToCSV() {
     csv += 'Total Contract Value,£' + data.summary.totalContractValue.toFixed(2) + '\n';
     csv += 'Total Payments,£' + data.summary.totalPayments.toFixed(2) + '\n';
     csv += 'New Contracts,' + data.summary.newContracts + '\n';
-    csv += 'Ending Contracts,' + data.summary.endingContracts + '\n\n';
+    csv += 'Contracts Ended,' + data.summary.endedContracts + '\n';
+    csv += 'Contracts Ending Soon,' + data.summary.endingContracts + '\n\n';
     
     // Contract Value by Local Authority
     if (Object.keys(data.contractsByLA).length > 0) {
