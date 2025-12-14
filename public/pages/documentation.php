@@ -275,7 +275,7 @@ include INCLUDES_PATH . '/header.php';
         <h4>Contracts by Local Authority</h4>
         <ul>
             <li>Breakdown showing number of contracts and total value per local authority</li>
-            <li>Status indicators (✓ OK or ⚠️ Issues) to quickly identify potential problems</li>
+            <li>Status indicators (<i class="fa-solid fa-check-circle" style="color: #10b981;"></i> OK or <i class="fa-solid fa-exclamation-triangle" style="color: #ef4444;"></i> Issues) to quickly identify potential problems</li>
             <li>Sorted by total value (highest first) for easy prioritization</li>
         </ul>
         

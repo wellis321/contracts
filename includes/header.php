@@ -59,6 +59,7 @@ $cssPath = $baseUrl . '/assets/css/style.css';
                                 <li><a href="<?php echo htmlspecialchars(url('contract-types.php')); ?>">Contract Types</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('rates.php')); ?>">Rates</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('reports.php')); ?>">Reports</a></li>
+                                <li><a href="<?php echo htmlspecialchars(url('ai-assistant.php')); ?>">AI Assistant</a></li>
                             </ul>
                         </li>
                         
@@ -66,6 +67,8 @@ $cssPath = $baseUrl . '/assets/css/style.css';
                         <li class="nav-dropdown">
                             <a href="#" class="nav-dropdown-toggle">Learn <span class="dropdown-arrow">▼</span></a>
                             <ul class="nav-dropdown-menu">
+                                <li><a href="<?php echo htmlspecialchars(url('pages/why-use-this-system.php')); ?>"><strong>Why Use This System</strong></a></li>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/social-care-contracts-guide.php')); ?>">Contracts Guide</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/glossary.php')); ?>">Glossary</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/documentation.php')); ?>">Documentation</a></li>
@@ -156,6 +159,8 @@ $cssPath = $baseUrl . '/assets/css/style.css';
                         <li class="nav-dropdown">
                             <a href="#" class="nav-dropdown-toggle">Learn <span class="dropdown-arrow">▼</span></a>
                             <ul class="nav-dropdown-menu">
+                                <li><a href="<?php echo htmlspecialchars(url('pages/why-use-this-system.php')); ?>"><strong>Why Use This System</strong></a></li>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/social-care-contracts-guide.php')); ?>">Contracts Guide</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/glossary.php')); ?>">Glossary</a></li>
                                 <li><a href="<?php echo htmlspecialchars(url('pages/documentation.php')); ?>">Documentation</a></li>

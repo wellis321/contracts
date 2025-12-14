@@ -62,7 +62,7 @@ $localAuthorities = $stmt->fetchAll();
             <div class="alert <?php echo $monitoringStatus['overall_status'] === 'error' ? 'alert-error' : 'alert-warning'; ?>" style="margin-bottom: 1.5rem;">
                 <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                     <div style="flex: 1;">
-                        <strong>⚠️ Rate Monitoring Alert</strong>
+                        <strong><i class="fa-solid fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>Rate Monitoring Alert</strong>
                         <p style="margin: 0.5rem 0 0 0;">
                             <?php 
                             $firstWarning = null;

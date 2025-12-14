@@ -167,7 +167,7 @@ include INCLUDES_PATH . '/header.php';
                         <td><?php echo htmlspecialchars($user['email']); ?></td>
                         <td>
                             <?php if ($user['email_verified']): ?>
-                                <span style="color: var(--success-color);">✓ Verified</span>
+                                <span style="color: var(--success-color);"><i class="fa-solid fa-check-circle" style="margin-right: 0.5rem;"></i>Verified</span>
                             <?php else: ?>
                                 <span style="color: var(--warning-color);">✗ Not Verified</span>
                             <?php endif; ?>

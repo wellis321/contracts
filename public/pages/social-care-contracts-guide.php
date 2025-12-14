@@ -433,7 +433,7 @@ include INCLUDES_PATH . '/header.php';
             <h3>Contract Management</h3>
             <div style="display: grid; gap: 1rem; margin-top: 1rem;">
                 <div class="card" style="margin: 0;">
-                    <h4>✓ Do</h4>
+                    <h4><i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.5rem;"></i>Do</h4>
                     <ul style="margin-left: 2rem; margin-top: 0.5rem;">
                         <li>Keep detailed records of all contract terms</li>
                         <li>Track rate changes over time</li>

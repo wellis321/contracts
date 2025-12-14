@@ -316,6 +316,17 @@ if (empty($endDate) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $endDate)) {
 
 $db = getDbConnection();
 
+// Get organisation name for export
+$organisationName = 'Unknown Organisation';
+if ($organisationId) {
+    $stmt = $db->prepare("SELECT name FROM organisations WHERE id = ?");
+    $stmt->execute([$organisationId]);
+    $org = $stmt->fetch();
+    if ($org && !empty($org['name'])) {
+        $organisationName = $org['name'];
+    }
+}
+
 // Get user's accessible team IDs (for filtering contracts)
 $accessibleTeamIds = RBAC::getAccessibleTeamIds();
 
@@ -925,6 +936,11 @@ include INCLUDES_PATH . '/header.php';
         </div>
         <div class="form-group" style="margin-top: 1rem;">
             <button type="submit" class="btn btn-primary">Generate Report</button>
+            <?php 
+            // Check if user manually entered dates
+            $hasManualDates = (isset($_GET['start_date']) && trim($_GET['start_date']) !== '') || 
+                              (isset($_GET['end_date']) && trim($_GET['end_date']) !== '');
+            ?>
             <?php if (isset($_GET['fy_range']) && $_GET['fy_range'] !== 'custom' && !$hasManualDates): ?>
                 <input type="hidden" name="fy_range" value="<?php echo htmlspecialchars($_GET['fy_range']); ?>">
             <?php else: ?>
@@ -1491,6 +1507,7 @@ function restoreSectionPreferences() {
 
 // Export data to CSV
 function exportToCSV() {
+    try {
     const data = {
         summary: {
             activeContracts: <?php echo $activeInPeriod; ?>,
@@ -1517,6 +1534,7 @@ function exportToCSV() {
     
     // Create CSV content
     let csv = 'Report Data Export\n';
+    csv += 'Organisation: <?php echo htmlspecialchars($organisationName); ?>\n';
     csv += 'Date Range: <?php echo htmlspecialchars($startDate); ?> to <?php echo htmlspecialchars($endDate); ?>\n';
     csv += 'Generated: <?php echo date('Y-m-d H:i:s'); ?>\n\n';
     
@@ -1532,9 +1550,12 @@ function exportToCSV() {
     // Contract Value by Local Authority
     if (Object.keys(data.contractsByLA).length > 0) {
         csv += 'CONTRACT VALUE BY LOCAL AUTHORITY\n';
-        csv += 'Local Authority,Number of Contracts,Total Value\n';
-        Object.entries(data.contractsByLA).sort((a, b) => b[1].value - a[1].value).forEach(([la, data]) => {
-            csv += '"' + la + '",' + data.count + ',£' + data.value.toFixed(2) + '\n';
+        csv += 'Local Authority,Active Contracts,Inactive Contracts,Total Value\n';
+        Object.entries(data.contractsByLA).sort((a, b) => b[1].value - a[1].value).forEach(([laKey, laData]) => {
+            const laName = laData.name || laKey;
+            const activeCount = laData.active_count || 0;
+            const inactiveCount = laData.inactive_count || 0;
+            csv += '"' + laName + '",' + activeCount + ',' + inactiveCount + ',£' + laData.value.toFixed(2) + '\n';
         });
         csv += '\n';
     }
@@ -1617,11 +1638,15 @@ function exportToCSV() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'reports_<?php echo date('Y-m-d'); ?>.csv');
+    link.setAttribute('download', '<?php echo htmlspecialchars(preg_replace('/[^a-zA-Z0-9_-]/', '_', $organisationName)); ?>_reports_<?php echo date('Y-m-d'); ?>.csv');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    } catch (error) {
+        console.error('Error exporting CSV:', error);
+        alert('Error exporting CSV. Please check the browser console for details.');
+    }
 }
 
 // Initialize charts when page loads

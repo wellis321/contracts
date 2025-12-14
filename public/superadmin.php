@@ -78,7 +78,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="alert alert-warning" style="margin-bottom: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div>
-                    <strong>⚠️ Pending Seat Change Requests</strong>
+                    <strong><i class="fa-solid fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>Pending Seat Change Requests</strong>
                     <p style="margin: 0.5rem 0 0 0;">
                         You have <?php echo $pendingSeatRequestsCount; ?> pending seat change request<?php echo $pendingSeatRequestsCount > 1 ? 's' : ''; ?> waiting for review.
                     </p>

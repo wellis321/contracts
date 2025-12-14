@@ -151,7 +151,7 @@ include INCLUDES_PATH . '/header.php';
         <h3 style="margin-top: 0;"><i class="fas fa-bug"></i> Diagnostic Information</h3>
         <p><strong>Active Monitors:</strong> <?php echo count($monitors); ?></p>
         <?php if (empty($monitors)): ?>
-            <p style="color: var(--danger-color);"><strong>⚠️ No active monitors configured.</strong> Create a monitor above to start tracking opportunities.</p>
+            <p style="color: var(--danger-color);"><strong><i class="fa-solid fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>No active monitors configured.</strong> Create a monitor above to start tracking opportunities.</p>
         <?php else: ?>
             <p><strong>API Status:</strong> 
                 <?php
@@ -159,7 +159,7 @@ include INCLUDES_PATH . '/header.php';
                 try {
                     $testData = TenderMonitor::checkPCSAPI('social care', '85000000');
                     if ($testData) {
-                        echo '<span style="color: green;">✓ API accessible</span>';
+                        echo '<span style="color: green;"><i class="fa-solid fa-check-circle" style="margin-right: 0.5rem;"></i>API accessible</span>';
                         $releasesCount = 0;
                         if (isset($testData['releases'])) {
                             $releasesCount = count($testData['releases']);

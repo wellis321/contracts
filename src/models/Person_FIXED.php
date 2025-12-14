@@ -252,26 +252,13 @@ class Person {
             }
         }
         
-        // Final deduplication pass - ensure no duplicates by contract ID AND signature
+        // Final deduplication pass - ensure no duplicates by contract ID
         $finalContracts = [];
         $finalSeenIds = [];
-        $finalSeenSignatures = [];
         foreach ($allContracts as $contract) {
             $contractId = $contract['id'] ?? null;
-            
-            // Create unique signature
-            $contractSignature = trim(($contract['contract_number'] ?? '') . '|' . ($contract['title'] ?? ''));
-            
-            // Prevent duplicates by ID AND signature
-            if (!in_array($contractId, $finalSeenIds) && 
-                !in_array($contractSignature, $finalSeenSignatures)) {
-                // Add contract
-                if ($contractId) {
-                    $finalSeenIds[] = $contractId;
-                }
-                if (!empty($contractSignature)) {
-                    $finalSeenSignatures[] = $contractSignature;
-                }
+            if ($contractId && !in_array($contractId, $finalSeenIds)) {
+                $finalSeenIds[] = $contractId;
                 $finalContracts[] = $contract;
             }
         }

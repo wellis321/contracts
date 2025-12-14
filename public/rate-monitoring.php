@@ -57,7 +57,7 @@ include INCLUDES_PATH . '/header.php';
     <!-- Overall Status Alert -->
     <?php if ($monitoringStatus['overall_status'] === 'error'): ?>
         <div class="alert alert-error">
-            <strong>⚠️ Critical Issues Found</strong>
+            <strong><i class="fa-solid fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>Critical Issues Found</strong>
             <ul style="margin: 0.5rem 0 0 1.5rem;">
                 <?php foreach ($monitoringStatus['errors'] as $error): ?>
                     <li><?php echo htmlspecialchars($error); ?></li>
@@ -68,7 +68,7 @@ include INCLUDES_PATH . '/header.php';
         <div class="alert alert-warning">
             <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
                 <div style="flex: 1;">
-                    <strong>⚠️ Warnings</strong>
+                    <strong><i class="fa-solid fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>Warnings</strong>
                     <ul style="margin: 0.5rem 0 0 1.5rem;">
                         <?php foreach ($monitoringStatus['warnings'] as $warning): 
                             $warningMessage = is_array($warning) ? $warning['message'] : $warning;
@@ -97,7 +97,7 @@ include INCLUDES_PATH . '/header.php';
         </div>
     <?php else: ?>
         <div class="alert alert-success">
-            <strong>✓ All rates are current and valid</strong>
+            <strong><i class="fa-solid fa-check-circle" style="margin-right: 0.5rem; color: #10b981;"></i>All rates are current and valid</strong>
         </div>
     <?php endif; ?>
     
