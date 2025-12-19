@@ -57,10 +57,59 @@ CREATE TABLE IF NOT EXISTS contract_people (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Add person_id to contracts table for single person contracts (optional, for quick lookup)
-ALTER TABLE contracts 
-ADD COLUMN person_id INT NULL AFTER local_authority_id,
-ADD FOREIGN KEY fk_contract_person (person_id) REFERENCES people(id) ON DELETE SET NULL,
-ADD INDEX idx_person (person_id);
+-- Safe to run multiple times (checks if column exists first)
+
+-- Add person_id column if it doesn't exist
+SET @col_exists = (
+    SELECT COUNT(*) 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'contracts' 
+    AND COLUMN_NAME = 'person_id'
+);
+
+SET @sql = IF(@col_exists = 0,
+    'ALTER TABLE contracts ADD COLUMN person_id INT NULL AFTER local_authority_id',
+    'SELECT "Column person_id already exists" AS message'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add foreign key if it doesn't exist
+SET @fk_exists = (
+    SELECT COUNT(*) 
+    FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'contracts' 
+    AND CONSTRAINT_NAME = 'fk_contract_person'
+    AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+);
+
+SET @sql = IF(@fk_exists = 0,
+    'ALTER TABLE contracts ADD FOREIGN KEY fk_contract_person (person_id) REFERENCES people(id) ON DELETE SET NULL',
+    'SELECT "Foreign key fk_contract_person already exists" AS message'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Add index if it doesn't exist
+SET @idx_exists = (
+    SELECT COUNT(*) 
+    FROM INFORMATION_SCHEMA.STATISTICS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'contracts' 
+    AND INDEX_NAME = 'idx_person'
+);
+
+SET @sql = IF(@idx_exists = 0,
+    'ALTER TABLE contracts ADD INDEX idx_person (person_id)',
+    'SELECT "Index idx_person already exists" AS message'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
 -- Note: For single person contracts, you can use person_id directly
 -- For bulk contracts, use the contract_people junction table

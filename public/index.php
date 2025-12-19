@@ -1105,10 +1105,10 @@ include INCLUDES_PATH . '/header.php';
             <!-- Dynamic Content Section 4 -->
             <div style="background: #fef3c7; border-top: 3px solid #f59e0b; border-bottom: 3px solid #f59e0b; padding: 3rem 1rem; margin: 3rem 0;">
                 <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; padding: 2rem 0;">
-                    <div>
-                        <img src="<?php echo htmlspecialchars(url('assets/images/documentatiuion.jpeg')); ?>" alt="Expert Guidance and Documentation" style="width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                    <div id="expert-guidance-image-container">
+                        <img id="expert-guidance-image" src="<?php echo htmlspecialchars(url('assets/images/documentatiuion.jpeg')); ?>" alt="Expert Guidance and Documentation" style="width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);" onload="fetch('http://127.0.0.1:7242/ingest/c1a88bf1-3c50-4228-bba1-bfa7a7f8ff2a',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.php:1109',message:'Image loaded - dimensions',data:{naturalWidth:this.naturalWidth,naturalHeight:this.naturalHeight,clientWidth:this.clientWidth,clientHeight:this.clientHeight,offsetWidth:this.offsetWidth,offsetHeight:this.offsetHeight,containerHeight:document.getElementById('expert-guidance-image-container')?.offsetHeight,textColumnHeight:document.getElementById('expert-guidance-text-column')?.offsetHeight},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});">
                     </div>
-                    <div style="display: flex; flex-direction: column; justify-content: center; min-height: 100%;">
+                    <div id="expert-guidance-text-column" style="display: flex; flex-direction: column; justify-content: center; min-height: 100%;">
                         <h3 style="margin-top: 0; margin-bottom: 1.5rem; color: #78350f;">Expert Guidance & Support</h3>
                         <p style="color: #92400e; line-height: 1.7; margin-bottom: 1.5rem;">
                             Access comprehensive documentation, how-to guides, and FAQs to help you make the most of the platform. 
@@ -1207,6 +1207,63 @@ include INCLUDES_PATH . '/header.php';
     }
 }
 </style>
+
+<script>
+// #region agent log
+(function() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', measureExpertGuidanceImage);
+    } else {
+        measureExpertGuidanceImage();
+    }
+    
+    function measureExpertGuidanceImage() {
+        setTimeout(function() {
+            var img = document.getElementById('expert-guidance-image');
+            var container = document.getElementById('expert-guidance-image-container');
+            var textColumn = document.getElementById('expert-guidance-text-column');
+            var grid = container ? container.parentElement : null;
+            
+            if (img && container) {
+                var computedStyle = window.getComputedStyle(img);
+                var containerStyle = window.getComputedStyle(container);
+                var gridStyle = grid ? window.getComputedStyle(grid) : null;
+                
+                fetch('http://127.0.0.1:7242/ingest/c1a88bf1-3c50-4228-bba1-bfa7a7f8ff2a', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        location: 'index.php:measureExpertGuidanceImage',
+                        message: 'Page loaded - full dimension analysis',
+                        data: {
+                            imageNaturalWidth: img.naturalWidth,
+                            imageNaturalHeight: img.naturalHeight,
+                            imageClientWidth: img.clientWidth,
+                            imageClientHeight: img.clientHeight,
+                            imageOffsetWidth: img.offsetWidth,
+                            imageOffsetHeight: img.offsetHeight,
+                            imageComputedHeight: computedStyle.height,
+                            imageComputedWidth: computedStyle.width,
+                            imageComputedMaxHeight: computedStyle.maxHeight,
+                            containerOffsetHeight: container.offsetHeight,
+                            containerOffsetWidth: container.offsetWidth,
+                            containerComputedHeight: containerStyle.height,
+                            textColumnOffsetHeight: textColumn ? textColumn.offsetHeight : null,
+                            gridAlignItems: gridStyle ? gridStyle.alignItems : null,
+                            gridDisplay: gridStyle ? gridStyle.display : null
+                        },
+                        timestamp: Date.now(),
+                        sessionId: 'debug-session',
+                        runId: 'run1',
+                        hypothesisId: 'A'
+                    })
+                }).catch(function() {});
+            }
+        }, 100);
+    }
+})();
+// #endregion agent log
+</script>
 
 <?php include INCLUDES_PATH . '/footer.php'; ?>
 

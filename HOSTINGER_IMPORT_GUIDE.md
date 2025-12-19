@@ -19,11 +19,25 @@ This guide walks you through importing the SQL schema to your Hostinger database
    - Click **"Go"** at the bottom
    - Wait for the import to complete
 
-4. **Import Migrations (if any)**
-   - After importing `schema.sql`, you may need to import migration files
-   - Select your database again
-   - Click **"Import"** tab
-   - Import each migration file in order (they're numbered/dated)
+4. **Import Required Migrations** ⚠️ **IMPORTANT**
+   - After importing `schema.sql`, you **MUST** run migration files
+   - The application requires several migrations to work properly
+   - **See `HOSTINGER_MIGRATIONS_GUIDE.md` for complete list**
+   - **Minimum required migrations:**
+     1. `migration_email_verification.sql` (for login)
+     2. `migration_teams_hierarchy.sql` (for contracts - **REQUIRED**)
+     3. `migration_default_contract_types.sql` (for contracts)
+     4. `migration_person_tracking.sql` (for people tracking)
+     5. `migration_contract_procurement_fields.sql` (for full features)
+     6. `migration_audit_logs.sql` (for change tracking)
+   
+   **How to import each migration:**
+   - Select your database
+   - Click **"SQL"** tab
+   - Click **"Choose File"**
+   - Select the migration file from `sql/` folder
+   - Click **"Go"**
+   - Repeat for each migration file
 
 ## Important Notes
 

@@ -61,8 +61,10 @@ class Auth {
         $user = $stmt->fetch();
         
         if ($user && password_verify($password, $user['password_hash'])) {
-            // Check if email is verified
-            if (!$user['email_verified']) {
+            // Check if email is verified (only if email_verified column exists)
+            // For superadmin users created before email verification migration, email_verified may not exist
+            $emailVerified = $user['email_verified'] ?? true; // Default to true if column doesn't exist
+            if (!$emailVerified) {
                 return ['error' => 'email_not_verified', 'message' => 'Please verify your email address before logging in. Check your inbox for the verification link.'];
             }
             

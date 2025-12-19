@@ -155,9 +155,10 @@ if (empty($email) || empty($password) || empty($firstName) || empty($lastName)) 
             $db->beginTransaction();
             
             // Insert user (organisation_id is NULL for superadmin)
+            // Superadmin users don't need email verification, so set email_verified = TRUE
             $stmt = $db->prepare("
-                INSERT INTO users (organisation_id, email, password_hash, first_name, last_name)
-                VALUES (NULL, ?, ?, ?, ?)
+                INSERT INTO users (organisation_id, email, password_hash, first_name, last_name, email_verified, is_active)
+                VALUES (NULL, ?, ?, ?, ?, TRUE, TRUE)
             ");
             $stmt->execute([$email, $passwordHash, $firstName, $lastName]);
             
