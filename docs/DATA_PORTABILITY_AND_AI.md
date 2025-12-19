@@ -257,3 +257,6 @@ Export JSON → Feed to reporting tool → Generate automated reports
 
 For questions about data formats or integration, see the API documentation or contact support.
 
+
+
+

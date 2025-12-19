@@ -1,6 +1,32 @@
-# Redirect to public directory
+# Prevent directory listing
+Options -Indexes
+
+# Redirect all requests to public directory
+# This allows the document root to be set to the project root (works on Hostinger and locally)
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^$ public/ [L]
-    RewriteRule (.*) public/$1 [L]
+    
+    # Protect sensitive directories first (block before redirecting)
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^src/ - [F,L]
+    RewriteRule ^sql/ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+    
+    # Skip rewrite if request is already for public/ directory
+    RewriteCond %{REQUEST_URI} ^/public/
+    RewriteRule ^ - [L]
+    
+    # Handle root URL specifically - must come before general rule
+    RewriteCond %{REQUEST_URI} ^/?$
+    RewriteRule ^$ public/index.php [L]
+    
+    # Handle all other requests - redirect to public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
+
+# Protect sensitive files and folders from web access
+<FilesMatch "\.(env|sql|log|ini|md|txt)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

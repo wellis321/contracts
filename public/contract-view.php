@@ -99,6 +99,36 @@ $assignableTeams = $canAccessAllTeams ? $teams : array_filter($teams, function($
 // Get people for single person contracts
 $people = Person::findByOrganisation($organisationId);
 
+// Deduplicate people (same logic as people.php)
+$seenIds = [];
+$seenPersonKeys = [];
+$uniquePeople = [];
+foreach ($people as $person) {
+    $id = $person['id'] ?? null;
+    $firstName = $person['first_name'] ?? '';
+    $lastName = $person['last_name'] ?? '';
+    $dateOfBirth = $person['date_of_birth'] ?? '';
+    
+    // First priority: skip if we've seen this exact person ID
+    if ($id && in_array($id, $seenIds)) {
+        continue;
+    }
+    
+    // Second priority: if we've seen this exact combination of name and DOB, skip
+    $personKey = md5($firstName . '|' . $lastName . '|' . $dateOfBirth);
+    if (in_array($personKey, $seenPersonKeys)) {
+        continue;
+    }
+    
+    // Add to unique people
+    if ($id) {
+        $seenIds[] = $id;
+    }
+    $seenPersonKeys[] = $personKey;
+    $uniquePeople[] = $person;
+}
+$people = $uniquePeople;
+
 // Handle payment actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin) {
     $paymentAction = $_POST['payment_action'] ?? '';

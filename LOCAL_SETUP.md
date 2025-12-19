@@ -64,29 +64,35 @@ MAMP (Mac, Apache, MySQL, PHP) is a free, all-in-one solution perfect for macOS.
    - For XAMPP, use `localhost` and leave `DB_PASS` empty
    - The `.env` file is already in `.gitignore` so your credentials won't be committed
 
-### Step 7: Set Document Root (Option A - Recommended)
+### Step 7: Set Document Root (Simple Setup)
 
-1. In MAMP, click "Preferences"
-2. Go to "Web Server" tab
-3. Click "Select..." next to "Document Root"
-4. Navigate to your project folder and select the `public` folder
-5. Click "OK" and restart servers
+**Set document root to the project root folder** (same as Hostinger). The application automatically handles routing.
 
-Now access your app at: http://localhost:8888/
+1. In MAMP, click **"Preferences"** (or "MAMP" → "Preferences")
+2. Go to **"Web Server"** tab
+3. Click **"Select..."** next to "Document Root"
+4. Navigate to and **select your project root folder** (e.g., `/Users/wellis/Desktop/Cursor/contracts/`)
+   - This is the folder that contains `config/`, `public/`, `src/`, `sql/`, `index.php`, etc.
+   - **Do NOT** select the `public` subfolder
+5. Click **"OK"**
+6. **Restart MAMP servers:**
+   - Click **"Stop Servers"**
+   - Wait a few seconds for servers to stop
+   - Click **"Start Servers"**
+   - Wait for both Apache and MySQL to show green/running status
 
-### Step 7 Alternative: Set Document Root (Option B - Using Project Root)
-
-If you prefer to keep MAMP's default document root:
-
-1. Keep MAMP's document root as default (usually `/Applications/MAMP/htdocs`)
-2. Create a symbolic link or copy your project there
-3. Or configure virtual host (see below)
+**How it works:** The root `index.php` file automatically loads the application from the `public` folder. This is the same setup used on Hostinger and other hosting providers - just set document root to the project root folder. No special configuration needed!
 
 ### Step 8: Test the Application
 
-1. Open browser and go to: http://localhost:8888/ (or your configured URL)
-2. You should see the home page
-3. Try accessing: http://localhost:8888/index.php
+1. Open your browser and go to: **http://localhost:8888/**
+2. **You should see the application home page**
+   - ✅ **Correct:** You see the application with navigation, content, etc.
+   - ❌ **Wrong:** You see a directory listing showing folders like `config/`, `src/`, `sql/`, etc.
+3. If you see a directory listing, verify:
+   - Document root is set to the project root (not `public` folder)
+   - Apache mod_rewrite is enabled (should be by default in MAMP)
+   - Servers were restarted after changing document root
 
 ---
 
@@ -271,11 +277,26 @@ Then run the SQL commands from Method 1.
 - Clear browser cache
 - Try accessing directly: http://localhost:8888/phpMyAdmin (MAMP) or http://localhost/phpmyadmin (XAMPP)
 
-### Application Not Loading
+### Application Not Loading / I See a Directory Listing
 
-- Check that document root points to the `public` folder
-- Verify `.htaccess` file exists in `public` folder
+**If you see a directory listing (showing folders like `config/`, `src/`, `sql/`) instead of the application:**
+
+This usually means:
+1. Document root is not set to the project root, OR
+2. Apache mod_rewrite is not enabled
+
+**Fix:**
+1. **Verify document root:** In MAMP Preferences → Web Server, the document root should be your **project root folder** (the one containing `config/`, `public/`, `src/`, etc.)
+   - ✅ Correct: `/Users/wellis/Desktop/Cursor/contracts/`
+   - ❌ Wrong: `/Users/wellis/Desktop/Cursor/contracts/public/`
+2. **Enable mod_rewrite:** In MAMP Preferences → PHP, ensure Apache modules are enabled (mod_rewrite should be enabled by default)
+3. **Restart MAMP servers** (Stop, then Start)
+4. Refresh your browser at `http://localhost:8888/`
+
+**Other checks:**
+- Verify `.htaccess` file exists in project root folder
 - Check Apache error logs in MAMP/XAMPP
+- Ensure servers were restarted after changing document root
 
 ---
 
@@ -283,11 +304,13 @@ Then run the SQL commands from Method 1.
 
 Once set up, verify everything works:
 
-- [ ] MAMP/XAMPP servers are running
+- [ ] MAMP/XAMPP servers are running (green indicators)
+- [ ] **Document root set to project root folder** (MAMP/XAMPP - the folder containing `config/`, `public/`, etc.)
 - [ ] Database `social_care_contracts` exists
 - [ ] Schema imported successfully
+- [ ] `.env` file configured with correct database credentials
 - [ ] Can access http://localhost:8888/ (or your configured URL)
-- [ ] Can see home page
+- [ ] **See application home page (NOT a directory listing)**
 - [ ] Can access login page
 - [ ] Can log in with superadmin account
 - [ ] Can access superadmin panel

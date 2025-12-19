@@ -83,15 +83,28 @@ require_once CONFIG_PATH . '/database.php';
 
 // Calculate base URL dynamically based on document root
 // This is used for generating correct URLs regardless of server configuration
+// Works whether document root is set to project root or public folder
 if (!function_exists('getBaseUrl')) {
     function getBaseUrl() {
         static $baseUrl = null;
         if ($baseUrl === null) {
             $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
             $docRootNormalized = rtrim(str_replace('\\', '/', $docRoot), '/');
             $lastPart = strtolower(basename($docRootNormalized));
+            
+            // Check if document root is public folder
             $isPublicRoot = ($lastPart === 'public');
-            $baseUrl = $isPublicRoot ? '' : '/public';
+            
+            // Also check if script is in public folder but doc root is project root
+            if (!$isPublicRoot && strpos($scriptName, '/public/') !== false) {
+                $baseUrl = '/public';
+            } elseif ($isPublicRoot) {
+                $baseUrl = '';
+            } else {
+                // Default: assume document root is project root, so we need /public prefix
+                $baseUrl = '/public';
+            }
         }
         return $baseUrl;
     }

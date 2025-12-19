@@ -2,6 +2,8 @@
 
 Get your application running locally in minutes!
 
+> **💡 SIMPLE SETUP:** Set your document root to the **project root folder** (same as Hostinger). The `.htaccess` file automatically routes requests to the `public` folder. No need to configure the `public` folder as document root!
+
 ## Prerequisites Check
 
 Before starting, make sure you have:
@@ -18,13 +20,24 @@ Before starting, make sure you have:
 2. Click **"Start Servers"** button
 3. Wait for green indicators (Apache and MySQL)
 
-### Step 2: Configure Document Root
+### Step 2: Configure Document Root (Simple!)
 
-1. In MAMP, click **"Preferences"**
+**Set document root to the project root folder** (just like Hostinger). The application automatically handles routing.
+
+1. In MAMP, click **"Preferences"** (or "MAMP" → "Preferences")
 2. Go to **"Web Server"** tab
 3. Click **"Select..."** next to "Document Root"
-4. Navigate to your project and select the **`public`** folder
-5. Click **"OK"** and restart servers (click **"Stop Servers"** then **"Start Servers"**)
+4. Navigate to and **select your project root folder**: `/Users/wellis/Desktop/Cursor/contracts/`
+   - Select the folder that contains `config/`, `public/`, `src/`, `index.php`, etc.
+   - **Do NOT** select the `public` subfolder
+5. Click **"OK"**
+6. **Restart servers:**
+   - Click **"Stop Servers"**
+   - Wait a few seconds
+   - Click **"Start Servers"**
+   - Wait for both Apache and MySQL to show green/running status
+
+**That's it!** The root `index.php` file automatically loads the application from the `public` folder. This works the same way as Hostinger and other hosting providers - just set document root to the project root folder.
 
 ### Step 3: Access the Application
 
@@ -33,12 +46,7 @@ Open your browser and go to:
 http://localhost:8888/
 ```
 
-Or if you kept default MAMP setup:
-```
-http://localhost:8888/contracts/public/
-```
-
-That's it! Your app should be running.
+You should see the application home page. The URL routing is handled automatically.
 
 ---
 
@@ -152,24 +160,39 @@ See `LOCAL_SETUP.md` section "Create Your First Superadmin User"
 
 ## Troubleshooting
 
+### "I see a directory listing instead of the application"
+
+**This usually means:**
+1. Document root is not set correctly, OR
+2. Apache mod_rewrite is not enabled
+
+**Fix:**
+1. **Verify document root:** In MAMP Preferences → Web Server, the document root should be your **project root folder** (the one containing `config/`, `public/`, `src/`, etc.)
+2. **Enable mod_rewrite:** In MAMP Preferences → PHP, make sure Apache modules are enabled (mod_rewrite should be enabled by default)
+3. **Restart MAMP servers** (Stop, then Start)
+4. Refresh your browser at `http://localhost:8888/`
+
+**Alternative:** If you prefer, you can set document root to the `public` folder instead. Both methods work, but using the project root is simpler and matches Hostinger setup.
+
 ### "Cannot connect to database"
 
-- ✅ Check MySQL is running
+- ✅ Check MySQL is running (green indicator in MAMP)
 - ✅ Verify `.env` credentials are correct
 - ✅ For MAMP, make sure port is `localhost:8889` in DB_HOST
 - ✅ Test connection in phpMyAdmin
 
 ### "404 Not Found" or "Page Not Found"
 
-- ✅ Check document root points to `public` folder
+- ✅ **Verify document root points to `public` folder** (see troubleshooting above)
 - ✅ Try accessing with full path: `http://localhost:8888/index.php`
 - ✅ Check `.htaccess` file exists in `public` folder
 
-### "Error loading page"
+### "Error loading page" or blank page
 
 - ✅ Check PHP errors in MAMP/XAMPP logs
 - ✅ Verify all files are in correct locations
 - ✅ Check file permissions
+- ✅ **Verify document root is set to `public` folder**
 
 ### Port Already in Use
 
@@ -189,10 +212,11 @@ See `LOCAL_SETUP.md` section "Create Your First Superadmin User"
 ## Quick Checklist
 
 - [ ] Servers started (Apache/MySQL or PHP server)
+- [ ] **Document root set to project root folder** (MAMP/XAMPP - the folder containing `config/`, `public/`, etc.)
 - [ ] Database exists and schema imported
 - [ ] `.env` file configured correctly
-- [ ] Can access http://localhost (or your configured URL)
-- [ ] See home page (not error page)
+- [ ] Can access http://localhost:8888/ (or your configured URL)
+- [ ] **See application home page (NOT a directory listing)**
 - [ ] Can log in with superadmin account
 
 ---
@@ -219,6 +243,9 @@ Once the app is running:
 6. Explore the reporting features
 
 For detailed setup instructions, see `LOCAL_SETUP.md`
+
+
+
 
 
 

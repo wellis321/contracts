@@ -49,16 +49,19 @@ cd contracts
    - The `.env` file is gitignored for security
 
 5. Set up your web server:
-   - Point your web server document root to the `public` directory
-   - Or configure URL rewriting if using Apache
+   - **Simple setup:** Point your web server document root to the **project root directory** (same as Hostinger)
+   - The `.htaccess` file automatically routes requests to the `public` folder
+   - For MAMP/XAMPP: Set document root to project root folder in server preferences
+   - See `QUICK_START.md` for detailed step-by-step instructions
 
 6. Start your local server (choose one):
-   - **MAMP**: Start servers, set document root to `public` folder, access at http://localhost:8888
-   - **XAMPP**: Start Apache/MySQL, access at http://localhost/public/
+   - **MAMP**: Start servers, **set document root to project root folder**, access at http://localhost:8888
+   - **XAMPP**: Start Apache/MySQL, set document root to project root folder, access at http://localhost/
    - **PHP Built-in**: Run `php -S localhost:8000` from `public` folder, access at http://localhost:8000
 
 7. Access the application:
-   - See `QUICK_START.md` for detailed instructions
+   - **See `QUICK_START.md` for detailed step-by-step instructions**
+   - The setup works the same way locally and on Hostinger - no special configuration needed!
 
 ### Production Deployment (Hostinger)
 

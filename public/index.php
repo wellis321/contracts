@@ -464,75 +464,75 @@ include INCLUDES_PATH . '/header.php';
         
         <div style="max-width: 1200px; margin: 0 auto;">
             <!-- Transformation: From Chaos to Organised Workflow -->
-            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 4rem 2rem; margin: 3rem 0; border-radius: 0.75rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);">
+            <div style="background: #f8fafc; color: var(--text-color); padding: 2.5rem 2rem; margin: 3rem 0; border-radius: 0.5rem; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);">
                 <div style="max-width: 1100px; margin: 0 auto;">
-                    <div style="text-align: center; margin-bottom: 3rem;">
-                        <h2 style="color: white; margin: 0 0 1rem 0; font-size: 2.5rem; font-weight: 700;">Transform Contract Management from Chaos to Control</h2>
-                        <p style="color: rgba(255,255,255,0.9); font-size: 1.25rem; margin: 0; line-height: 1.6;">
+                    <div style="text-align: center; margin-bottom: 2.5rem;">
+                        <h2 style="color: var(--text-color); margin: 0 0 1rem 0; font-size: 1.75rem; font-weight: 600;">Transform Contract Management from Chaos to Control</h2>
+                        <p style="color: var(--text-light); font-size: 1.05rem; margin: 0; line-height: 1.6;">
                             Stop juggling spreadsheets, calendar reminders, and mental notes. Get a clear, organised workflow that works for you.
                         </p>
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
                         <!-- Before: The Chaos -->
-                        <div style="background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 0.5rem; padding: 2rem;">
-                            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                                <div style="background: #ef4444; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;">
-                                    <i class="fa-solid fa-xmark" style="font-size: 1.5rem; color: white;"></i>
+                        <div style="background: white; border: 1px solid #fee2e2; border-radius: 0.5rem; padding: 1.5rem;">
+                            <div style="display: flex; align-items: center; margin-bottom: 1.25rem;">
+                                <div style="background: #fee2e2; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.75rem; flex-shrink: 0;">
+                                    <i class="fa-solid fa-xmark" style="font-size: 1.25rem; color: #dc2626;"></i>
                                 </div>
-                                <h3 style="color: white; margin: 0; font-size: 1.5rem;">The Old Way: Chaos</h3>
+                                <h3 style="color: var(--text-color); margin: 0; font-size: 1.25rem; font-weight: 600;">The Old Way: Chaos</h3>
                             </div>
                             <ul style="list-style: none; padding: 0; margin: 0;">
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-times-circle" style="color: #ef4444; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-times-circle" style="color: #dc2626; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     Excel spreadsheets with end dates scattered everywhere
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-times-circle" style="color: #ef4444; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-times-circle" style="color: #dc2626; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     Calendar reminders for each contract (easy to miss)
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-times-circle" style="color: #ef4444; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-times-circle" style="color: #dc2626; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     "I think we bid on something in Aberdeen?" - no visibility
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-times-circle" style="color: #ef4444; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-times-circle" style="color: #dc2626; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     Panic when contracts expire unexpectedly
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9);">
-                                    <i class="fa-solid fa-times-circle" style="color: #ef4444; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color);">
+                                    <i class="fa-solid fa-times-circle" style="color: #dc2626; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     ~2 hours/week maintaining spreadsheets
                                 </li>
                             </ul>
                         </div>
                         
                         <!-- After: The Solution -->
-                        <div style="background: rgba(16, 185, 129, 0.1); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 0.5rem; padding: 2rem;">
-                            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                                <div style="background: #10b981; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;">
-                                    <i class="fa-solid fa-check" style="font-size: 1.5rem; color: white;"></i>
+                        <div style="background: white; border: 1px solid #d1fae5; border-radius: 0.5rem; padding: 1.5rem;">
+                            <div style="display: flex; align-items: center; margin-bottom: 1.25rem;">
+                                <div style="background: #d1fae5; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 0.75rem; flex-shrink: 0;">
+                                    <i class="fa-solid fa-check" style="font-size: 1.25rem; color: #059669;"></i>
                                 </div>
-                                <h3 style="color: white; margin: 0; font-size: 1.5rem;">The New Way: Organised</h3>
+                                <h3 style="color: var(--text-color); margin: 0; font-size: 1.25rem; font-weight: 600;">The New Way: Organised</h3>
                             </div>
                             <ul style="list-style: none; padding: 0; margin: 0;">
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-check-circle" style="color: #059669; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     One dashboard shows everything - contracts, tenders, deadlines
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-check-circle" style="color: #059669; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     Automatic alerts for contracts expiring in 6 months
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-check-circle" style="color: #059669; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     See your entire tender pipeline at a glance
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color); border-bottom: 1px solid #f3f4f6;">
+                                    <i class="fa-solid fa-check-circle" style="color: #059669; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     Proactive planning instead of reactive crises
                                 </li>
-                                <li style="padding: 0.75rem 0; color: rgba(255,255,255,0.9);">
-                                    <i class="fa-solid fa-check-circle" style="color: #10b981; margin-right: 0.75rem;"></i>
+                                <li style="padding: 0.625rem 0; color: var(--text-color);">
+                                    <i class="fa-solid fa-check-circle" style="color: #059669; margin-right: 0.625rem; font-size: 0.9rem;"></i>
                                     ~5 minutes/day reviewing dashboard (saves 7+ hours/week!)
                                 </li>
                             </ul>
@@ -540,31 +540,31 @@ include INCLUDES_PATH . '/header.php';
                     </div>
                     
                     <!-- Key Benefits Grid -->
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
-                        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 1.5rem; text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem; color: #fbbf24;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+                        <div style="background: white; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem; color: #f59e0b;">
                                 <i class="fa-solid fa-clock"></i>
                             </div>
-                            <h4 style="color: white; margin: 0 0 0.5rem 0;">Never Miss Deadlines</h4>
-                            <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 0.95rem; line-height: 1.5;">
+                            <h4 style="color: var(--text-color); margin: 0 0 0.5rem 0; font-size: 1rem; font-weight: 600;">Never Miss Deadlines</h4>
+                            <p style="color: var(--text-light); margin: 0; font-size: 0.9rem; line-height: 1.5;">
                                 See contracts ending in next 6 months with color-coded alerts. Red if < 90 days, orange if < 180 days.
                             </p>
                         </div>
-                        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 1.5rem; text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem; color: #3b82f6;">
+                        <div style="background: white; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-color);">
                                 <i class="fa-solid fa-chart-line"></i>
                             </div>
-                            <h4 style="color: white; margin: 0 0 0.5rem 0;">See Your Sales Pipeline</h4>
-                            <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 0.95rem; line-height: 1.5;">
+                            <h4 style="color: var(--text-color); margin: 0 0 0.5rem 0; font-size: 1rem; font-weight: 600;">See Your Sales Pipeline</h4>
+                            <p style="color: var(--text-light); margin: 0; font-size: 0.9rem; line-height: 1.5;">
                                 Track tender opportunities like a sales dashboard. Know exactly what's pending, under evaluation, or awarded.
                             </p>
                         </div>
-                        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 1.5rem; text-align: center;">
-                            <div style="font-size: 3rem; margin-bottom: 0.5rem; color: #9333ea;">
+                        <div style="background: white; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1.25rem; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem; color: #9333ea;">
                                 <i class="fa-solid fa-bullseye"></i>
                             </div>
-                            <h4 style="color: white; margin: 0 0 0.5rem 0;">Prioritize Your Work</h4>
-                            <p style="color: rgba(255,255,255,0.8); margin: 0; font-size: 0.95rem; line-height: 1.5;">
+                            <h4 style="color: var(--text-color); margin: 0 0 0.5rem 0; font-size: 1rem; font-weight: 600;">Prioritize Your Work</h4>
+                            <p style="color: var(--text-light); margin: 0; font-size: 0.9rem; line-height: 1.5;">
                                 Everything organised by priority. Urgent items highlighted, grouped by workflow stage, warnings for missing data.
                             </p>
                         </div>
@@ -572,20 +572,20 @@ include INCLUDES_PATH . '/header.php';
                     
                     <!-- Call to Action -->
                     <div style="text-align: center;">
-                        <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem; margin-bottom: 1.5rem;">
+                        <p style="color: var(--text-color); font-size: 1rem; margin-bottom: 1.25rem;">
                             <strong>Ready to transform your contract management?</strong><br>
-                            Get your organisation set up and start saving 7+ hours per week.
+                            <span style="color: var(--text-light);">Get your organisation set up and start saving 7+ hours per week.</span>
                         </p>
                         <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                            <a href="#contact-organisation" class="btn" style="background: #10b981; color: white; padding: 1rem 2.5rem; font-weight: 600; text-decoration: none; border-radius: 0.5rem; display: inline-block; font-size: 1.1rem;">
+                            <a href="#contact-organisation" class="btn btn-primary" style="padding: 0.875rem 2rem; font-weight: 600; text-decoration: none; display: inline-block;">
                                 Get Your Organisation Set Up
                             </a>
                             <?php if ($isLoggedIn): ?>
-                                <a href="<?php echo url('contract-workflow.php'); ?>" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 1rem 2.5rem; font-weight: 600; text-decoration: none; border: 2px solid rgba(255,255,255,0.3); border-radius: 0.5rem; display: inline-block; font-size: 1.1rem;">
+                                <a href="<?php echo url('contract-workflow.php'); ?>" class="btn btn-secondary" style="padding: 0.875rem 2rem; font-weight: 600; text-decoration: none; display: inline-block;">
                                     View Workflow Dashboard
                                 </a>
                             <?php else: ?>
-                                <a href="<?php echo url('pages/why-use-this-system.php'); ?>" class="btn" style="background: rgba(255,255,255,0.2); color: white; padding: 1rem 2.5rem; font-weight: 600; text-decoration: none; border: 2px solid rgba(255,255,255,0.3); border-radius: 0.5rem; display: inline-block; font-size: 1.1rem;">
+                                <a href="<?php echo url('pages/why-use-this-system.php'); ?>" class="btn btn-secondary" style="padding: 0.875rem 2rem; font-weight: 600; text-decoration: none; display: inline-block;">
                                     See How It Works
                                 </a>
                             <?php endif; ?>

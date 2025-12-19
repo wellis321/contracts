@@ -2,7 +2,11 @@
 # Enable rewrite engine
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /public/
+    
+    # Detect if document root is public folder or project root
+    # If document root is project root, RewriteBase should be /public/
+    # If document root is public folder, RewriteBase should be /
+    RewriteBase /
     
     # Redirect to index.php if file doesn't exist
     RewriteCond %{REQUEST_FILENAME} !-f

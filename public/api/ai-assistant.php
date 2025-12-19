@@ -171,21 +171,69 @@ if ($method === 'POST') {
     $stmt->execute([$organisationId]);
     $org = $stmt->fetch();
     
-    // Return data context for client-side AI processing
-    echo json_encode([
-        'query' => $query,
-        'is_general_query' => $isGeneralQuery,
-        'organisation_name' => $org['name'] ?? 'Your Organisation',
-        'summary' => $summary,
-        'context' => $dataContext,
-        'suggestions' => [
-            'Try asking: "Tell me about our contracts"',
-            'Try asking: "How many active contracts do we have?"',
-            'Try asking: "What contracts are expiring soon?"',
-            'Try asking: "Show me payments this month"',
-            'Try asking: "What is our total contract value?"'
-        ]
-    ]);
+    // Use AI Provider service with access control
+    $userId = Auth::getUserId();
+    $aiProvider = new AIProvider($userId, $organisationId, $accessibleTeamIds);
+    
+    try {
+        $aiResponse = $aiProvider->generateResponse($query, $dataContext, $summary);
+        
+        // If AI provider returned a response directly (external APIs)
+        if (isset($aiResponse['response'])) {
+            echo json_encode([
+                'query' => $query,
+                'is_general_query' => $isGeneralQuery,
+                'organisation_name' => $org['name'] ?? 'Your Organisation',
+                'summary' => $summary,
+                'context' => $dataContext,
+                'ai_response' => $aiResponse['response'],
+                'ai_method' => $aiResponse['method'],
+                'suggestions' => [
+                    'Try asking: "Tell me about our contracts"',
+                    'Try asking: "How many active contracts do we have?"',
+                    'Try asking: "What contracts are expiring soon?"',
+                    'Try asking: "Show me payments this month"',
+                    'Try asking: "What is our total contract value?"'
+                ]
+            ]);
+        } else {
+            // Return data for client-side processing (pattern matching, web_llm)
+            echo json_encode([
+                'query' => $query,
+                'is_general_query' => $isGeneralQuery,
+                'organisation_name' => $org['name'] ?? 'Your Organisation',
+                'summary' => $summary,
+                'context' => $dataContext,
+                'ai_method' => $aiResponse['method'] ?? 'pattern_matching',
+                'suggestions' => [
+                    'Try asking: "Tell me about our contracts"',
+                    'Try asking: "How many active contracts do we have?"',
+                    'Try asking: "What contracts are expiring soon?"',
+                    'Try asking: "Show me payments this month"',
+                    'Try asking: "What is our total contract value?"'
+                ]
+            ]);
+        }
+    } catch (Exception $e) {
+        // If AI provider fails, fall back to pattern matching
+        http_response_code(200);
+        echo json_encode([
+            'query' => $query,
+            'is_general_query' => $isGeneralQuery,
+            'organisation_name' => $org['name'] ?? 'Your Organisation',
+            'summary' => $summary,
+            'context' => $dataContext,
+            'ai_method' => 'pattern_matching',
+            'error' => $e->getMessage(),
+            'suggestions' => [
+                'Try asking: "Tell me about our contracts"',
+                'Try asking: "How many active contracts do we have?"',
+                'Try asking: "What contracts are expiring soon?"',
+                'Try asking: "Show me payments this month"',
+                'Try asking: "What is our total contract value?"'
+            ]
+        ]);
+    }
     
 } else {
     // GET request - return API info
