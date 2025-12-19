@@ -16,6 +16,10 @@ Options -Indexes
     RewriteCond %{REQUEST_URI} ^/public/
     RewriteRule ^ - [L]
     
+    # Allow direct access to create_superadmin.php in root (for initial setup)
+    RewriteCond %{REQUEST_URI} ^/create_superadmin\.php$
+    RewriteRule ^ - [L]
+    
     # Handle root URL specifically - must come before general rule
     RewriteCond %{REQUEST_URI} ^/?$
     RewriteRule ^$ public/index.php [L]

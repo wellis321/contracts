@@ -19,12 +19,19 @@
 
 1. Log in to Hostinger control panel
 2. Navigate to phpMyAdmin
-3. Create a new database (note the database name, username, and password)
+3. **Select your existing database** (e.g., `u248320297_care_contracts`)
+   - Hostinger databases often have names like `u[number]_database_name`
+   - The database name doesn't matter - the SQL file doesn't reference it
 4. Import the schema:
-   - Select your database
-   - Click "Import" tab
-   - Choose `sql/schema.sql`
-   - Click "Go"
+   - Make sure your database is selected in the left sidebar
+   - Click the **"Import"** tab at the top
+   - Click **"Choose File"** button
+   - Navigate to and select: `sql/schema.sql` from your project
+   - Leave all other settings as default
+   - Click **"Go"** at the bottom
+   - Wait for the import to complete (you should see a success message)
+
+**Note:** The `schema.sql` file has database name references commented out, so it will work with any database name. You don't need to modify the SQL file.
 
 ### 2. File Upload
 
@@ -42,12 +49,18 @@
 2. Edit `.env` file with production credentials:
    ```env
    DB_HOST=localhost
-   DB_NAME=your_database_name
+   DB_NAME=u248320297_care_contracts
    DB_USER=your_database_user
    DB_PASS=your_database_password
    DB_CHARSET=utf8mb4
    APP_URL=https://yourdomain.com
+   APP_ENV=production
    ```
+   
+   **Important:** 
+   - Replace `u248320297_care_contracts` with your actual Hostinger database name
+   - Get the database credentials from your Hostinger control panel
+   - The database name format on Hostinger is usually `u[number]_database_name`
 
 3. Edit `config/config.php` for production settings:
    ```php
